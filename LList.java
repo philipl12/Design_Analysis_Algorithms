@@ -1,36 +1,42 @@
+import java.io.*;
+
 class LList {
-    private Object next;
-    private int prob = 0;
+    LNode listHead2;
 
     public LList() {
-        next = null;
+        listHead2 = new LNode();
     }
 
-    public void setNext(Object next) {
-        this.next = next;
+    public void insertOneNode(LNode listHead, LNode newNode) {
+        LNode spot = findSpot(listHead, newNode);
+        spot.next = newNode;
+        newNode.next = null;
     }
 
-    public Object getNext() { return next; }
-
-    public int getCount() { return prob; }
-
-    public void insertOneNode(LList listHead, LNode newNode) {
-        listHead.setNext(newNode);
-        newNode.setNext(null);
+    public LNode findSpot(LNode listHead, LNode newNode) {
+        LNode spot = listHead;
+        while (spot.next != null && spot.prob < newNode.prob) {
+            spot = spot.next;
+        }
+        return spot;
     }
 
-/*
-    public void insertOneNode(LList listHead, LNode newNode) {
-        Object spot;
-        spot = spot.findSpot(listHead, newNode);
-        spot.setNext(newNode);
-    }
+    public void printList(BufferedWriter outWrite) {
+        try {
+            outWrite.write("listHead --> ");
+            LNode spot = listHead2;
+            do {
+                outWrite.write(spot.chStr + ", " + spot.prob + ", " + spot.next.chStr + " --> ");
+                spot = spot.next;
+                if (spot.next == null) {
+                    outWrite.write(spot.chStr + ", " + spot.prob + ", NULL"  + " --> NULL");
+                }
+            } while(spot.next != null);
 
-    public Object findSpot(LList listHead, LNode newNode) {
-        Object spot = listHead;
-        if (spot.getNext() != null && spot.getNext().getCount() < newNode.getCount()) {
+            outWrite.write('\n');
 
+        } catch (Exception e) {
+            System.out.println("No file");
         }
     }
-*/
 }
