@@ -7,32 +7,19 @@ public:
 
     string chStr;
     int prob;
-    LNode *next = NULL;
+    LNode *next;
 
     LNode() {
         chStr = "dummy";
         prob = 0;
+        next = NULL;
     }
 
     LNode(string chStrCopy, int probCopy) {
         chStr = chStrCopy;
         prob = probCopy;
     }
-/*
-    void insertOneNode(LNode listHead, LNode*newNode) {
-        LNode spot = findSpot(listHead, newNode);
-        spot.next = newNode;
-        newNode.next = NULL;
-    }
 
-    LNode findSpot(LNode listHead, LNode newNode) {
-        LNode spot = listHead;
-        while (spot.next != null && spot.prob < newNode.prob) {
-            spot = spot.next;
-        }
-        return spot;
-    }
-*/
 };
 
 class LList {
@@ -44,6 +31,34 @@ public:
         listHead2 = LNode();
     }
 
+    void insertOneNode(LNode listHeadCopy, LNode newNode) {
+        LNode spot = findSpot(listHeadCopy, newNode);
+        spot.next = &newNode;
+        newNode.next = NULL;
+    }
+
+    LNode findSpot(LNode listHeadCopy, LNode newNode) {
+        LNode spot = listHeadCopy;
+        while (spot.next != NULL && spot.prob < newNode.prob) {
+            spot = *spot.next;
+
+        }
+        return spot;
+    }
+
+    void printList(ofstream &fileOut) {
+        LNode spot = listHead2;
+        LNode temp = *spot.next;
+        do {
+            fileOut << spot.chStr << ", " << spot.prob << ", " << temp.chStr << " --> ";
+            spot = *spot.next;
+            fileOut << '\n';
+            if(spot.next == NULL) {
+                fileOut << spot.chStr << ", " << spot.prob << ", NULL"  << " --> NULL\n";
+            }
+        } while(spot.next != NULL);
+    }
+
 };
 
 int main(int argc, char** argv) {
@@ -51,12 +66,16 @@ int main(int argc, char** argv) {
     ofstream fileOut;
     string chStr;
     int prob;
+    LList listHead1 = LList();
 
     fileIn.open(argv[1]);
     fileOut.open(argv[2]);
 
     while (fileIn >> chStr >> prob) {
-        cout << chStr << ' ' << prob << '\n';
+        LNode newNode = LNode(chStr, prob);
+        listHead1.insertOneNode(listHead1.listHead2, newNode);
+        listHead1.printList(fileOut);
+        continue;
     }
 
     fileIn.close();
