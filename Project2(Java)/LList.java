@@ -9,13 +9,14 @@ class LList {
 
     public void insertOneNode(LNode listHead, LNode newNode) {
         LNode spot = findSpot(listHead, newNode);
+        newNode.next = spot.next;
         spot.next = newNode;
-        newNode.next = null;
+
     }
 
     public LNode findSpot(LNode listHead, LNode newNode) {
         LNode spot = listHead;
-        while (spot.next != null && spot.prob < newNode.prob) {
+        while (spot.next != null && spot.next.prob < newNode.prob) {
             spot = spot.next;
         }
         return spot;

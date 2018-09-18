@@ -12,6 +12,7 @@ class LNode {
     public LNode(String chStr, int prob) {
         this.chStr = chStr;
         this.prob = prob;
+        next = null;
     }
 
 }

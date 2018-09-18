@@ -7,7 +7,7 @@ public:
 
     string chStr;
     int prob;
-    LNode* next;
+    LNode *next;
 
     LNode() {
         chStr = "dummy";
@@ -18,6 +18,7 @@ public:
     LNode(string chStrCopy, int probCopy) {
         chStr = chStrCopy;
         prob = probCopy;
+        next = NULL;
     }
 
 };
@@ -25,47 +26,38 @@ public:
 class LList {
 public:
 
-    LNode listHead2;
+    LNode *listHead2;
 
     LList() {
-        listHead2 = LNode();
+        listHead2 = new LNode();
     }
 
-    void insertOneNode(LNode listHeadCopy, LNode newNode) {
-        //LNode spot = findSpot(listHeadCopy, newNode);
-        LNode spot = listHeadCopy;
-        spot.next = &newNode;
-        newNode.next = NULL;
-        while (spot.next != NULL) {
-            cout << spot.chStr << ' ' << spot.prob << " -> " << newNode.chStr << endl;
-            spot = spot.next;
-        }
+    void insertOneNode(LNode *listHeadCopy, LNode *newNode) {
+        LNode *spot = findSpot(listHeadCopy, newNode);
+        newNode->next = spot->next;
+        spot->next = newNode;
 
     }
 
-    LNode findSpot(LNode listHeadCopy, LNode newNode) {
-        LNode spot = listHeadCopy;
-        while (spot.next != NULL && spot.prob < newNode.prob) {
-            spot = *spot.next;
-
+    LNode* findSpot(LNode *listHeadCopy, LNode *newNode) {
+        LNode *spot = listHeadCopy;
+        while (spot->next != NULL && spot->next->prob < newNode->prob) {
+            spot = spot->next;
         }
         return spot;
     }
 
-    /*
     void printList(ofstream &fileOut) {
-        LNode spot = listHead2;
-        LNode temp = *spot.next;
+        LNode *spot = listHead2;
         do {
-            fileOut << spot.chStr << ", " << spot.prob << ", " << temp.chStr << " --> ";
-            spot = *spot.next;
-            fileOut << '\n';
-            if(spot.next == NULL) {
-                fileOut << spot.chStr << ", " << spot.prob << ", NULL"  << " --> NULL\n";
+            fileOut << spot->chStr << ", " << spot->prob << ", " << spot->next->chStr << " --> ";
+            spot = spot->next;
+            if(spot->next == NULL) {
+                fileOut << spot->chStr << ", " << spot->prob << ", NULL"  << " --> NULL\n";
             }
-        } while(spot.next != NULL);
+        } while(spot->next != NULL);
     }
-    */
+
 };
 
 int main(int argc, char** argv) {
@@ -74,17 +66,15 @@ int main(int argc, char** argv) {
     string chStr;
     int prob;
     LList listHead1 = LList();
-
     fileIn.open(argv[1]);
     fileOut.open(argv[2]);
 
     while (fileIn >> chStr >> prob) {
-        LNode newNode = LNode(chStr, prob);
-        //newNode->chStr = chStr;
-        //newNode->prob = prob;
-        //cout << "line 77 " << newNode->chStr << newNode->prob << endl;
+        LNode *newNode = new LNode();
+        newNode->chStr = chStr;
+        newNode->prob = prob;
         listHead1.insertOneNode(listHead1.listHead2, newNode);
-        //listHead1.printList(fileOut);
+        listHead1.printList(fileOut);
     }
 
     fileIn.close();
