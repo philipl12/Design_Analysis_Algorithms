@@ -55,6 +55,8 @@ public:
                 fileOut << spot->chStr << ", " << spot->prob << ", NULL"  << " --> NULL\n";
             }
         } while(spot->next != NULL);
+
+        fileOut << "\n\n";
     }
 
 };
@@ -81,6 +83,23 @@ public:
         }
         fileIn.close();
     }
+
+    void constructHuffmanBinTree(LList dummy, ofstream &fileOut) {
+        TNode *spot = dummy.listHead->next;
+        TNode *newNode = new TNode();
+
+        while(spot->next != NULL) {
+            newNode->chStr = spot->chStr + spot->next->chStr;
+            newNode->prob = spot->prob + spot->next->prob;
+            newNode->left = spot;
+            newNode->right = spot->next;
+            dummy.insertOneNode(spot, newNode);
+            dummy.printList(dummy.listHead, fileOut);
+            spot = spot->next->next;
+        }
+
+        cout << newNode->chStr << " line 100 " << newNode->prob << endl;
+    }
 };
 
 int main(int argc, char** argv) {
@@ -101,13 +120,14 @@ int main(int argc, char** argv) {
         newNode->chStr = chStr;
         newNode->prob = prob;
         fileOut1 << newNode->chStr << "  #" << newNode->prob << endl;
-        delete newNode;
+        dummy.insertOneNode(dummy.listHead, newNode);
     }
+
     fileIn.close();
     fileIn2.open(argv[1]);
     HuffBinTree test = HuffBinTree();
     test.constructHuffmanLList(fileIn2, fileOut5);
-
+    test.constructHuffmanBinTree(dummy, fileOut5);
 
     fileOut1.close();
     fileOut2.close();
