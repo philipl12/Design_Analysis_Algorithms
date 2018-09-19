@@ -46,8 +46,8 @@ public:
         return spot;
     }
 
-    void printList(ofstream &fileOut) {
-        TNode *spot = listHead;
+    void printList(TNode *listHeadCopy, ofstream &fileOut) {
+        TNode *spot = listHeadCopy;
         do {
             fileOut << spot->chStr << ", " << spot->prob << ", " << spot->next->chStr << " --> ";
             spot = spot->next;
@@ -66,34 +66,53 @@ public:
     HuffBinTree() {
         root = new TNode();
     }
+
+    void constructHuffmanLList(ifstream &fileIn, ofstream &fileOut) {
+        string chStr;
+        int prob;
+        LList dummy = LList();
+
+        while (fileIn >> chStr >> prob) {
+            TNode *newNode = new TNode();
+            newNode->chStr = chStr;
+            newNode->prob = prob;
+            dummy.insertOneNode(dummy.listHead, newNode);
+            dummy.printList(dummy.listHead, fileOut);
+        }
+        fileIn.close();
+    }
 };
 
 int main(int argc, char** argv) {
-    ifstream fileIn;
-    ofstream fileOut1; //, fileOut2, fileOut3, fileOut4, fileOut5;
+    ifstream fileIn, fileIn2;
+    ofstream fileOut1, fileOut2, fileOut3, fileOut4, fileOut5;
     string chStr;
     int prob;
     LList dummy = LList();
     fileIn.open(argv[1]);
     fileOut1.open(argv[2]);
-    //fileOut2.open(argv[3]);
-    //fileOut3.open(argv[4]);
-    //fileOut4.open(argv[5]);
-    //fileOut5.open(argv[6]);
+    fileOut2.open(argv[3]);
+    fileOut3.open(argv[4]);
+    fileOut4.open(argv[5]);
+    fileOut5.open(argv[6]);
 
     while (fileIn >> chStr >> prob) {
         TNode *newNode = new TNode();
         newNode->chStr = chStr;
         newNode->prob = prob;
-        dummy.insertOneNode(dummy.listHead, newNode);
-        dummy.printList(fileOut1);
+        fileOut1 << newNode->chStr << "  #" << newNode->prob << endl;
+        delete newNode;
     }
-
     fileIn.close();
+    fileIn2.open(argv[1]);
+    HuffBinTree test = HuffBinTree();
+    test.constructHuffmanLList(fileIn2, fileOut5);
+
+
     fileOut1.close();
-    //fileOut2.close();
-    //fileOut3.close();
-    //fileOut4.close();
-    //fileOut5.close();
+    fileOut2.close();
+    fileOut3.close();
+    fileOut4.close();
+    fileOut5.close();
     return 0;
 }
