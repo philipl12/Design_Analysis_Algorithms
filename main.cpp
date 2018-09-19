@@ -61,27 +61,39 @@ public:
 
 class HuffBinTree {
 public:
-    TNode *root;    
+    TNode *root;
+
+    HuffBinTree() {
+        root = new TNode();
+    }
 };
 
 int main(int argc, char** argv) {
     ifstream fileIn;
-    ofstream fileOut;
+    ofstream fileOut1; //, fileOut2, fileOut3, fileOut4, fileOut5;
     string chStr;
     int prob;
     LList dummy = LList();
     fileIn.open(argv[1]);
-    fileOut.open(argv[2]);
+    fileOut1.open(argv[2]);
+    //fileOut2.open(argv[3]);
+    //fileOut3.open(argv[4]);
+    //fileOut4.open(argv[5]);
+    //fileOut5.open(argv[6]);
 
     while (fileIn >> chStr >> prob) {
         TNode *newNode = new TNode();
         newNode->chStr = chStr;
         newNode->prob = prob;
         dummy.insertOneNode(dummy.listHead, newNode);
-        //dummy.printList(fileOut);
+        dummy.printList(fileOut1);
     }
 
     fileIn.close();
-    fileOut.close();
+    fileOut1.close();
+    //fileOut2.close();
+    //fileOut3.close();
+    //fileOut4.close();
+    //fileOut5.close();
     return 0;
 }
