@@ -55,8 +55,6 @@ public:
                 fileOut << spot->chStr << ", " << spot->prob << ", NULL"  << " --> NULL\n";
             }
         } while(spot->next != NULL);
-
-        fileOut << "\n\n";
     }
 
 };
@@ -86,9 +84,9 @@ public:
 
     void constructHuffmanBinTree(LList dummy, ofstream &fileOut) {
         TNode *spot = dummy.listHead->next;
-        TNode *newNode = new TNode();
 
         while(spot->next != NULL) {
+            TNode *newNode = new TNode();
             newNode->chStr = spot->chStr + spot->next->chStr;
             newNode->prob = spot->prob + spot->next->prob;
             newNode->left = spot;
@@ -96,10 +94,59 @@ public:
             dummy.insertOneNode(spot, newNode);
             dummy.printList(dummy.listHead, fileOut);
             spot = spot->next->next;
+            root = newNode;
         }
-
-        cout << newNode->chStr << " line 100 " << newNode->prob << endl;
     }
+
+    void getCode(TNode *T, string code, ofstream &fileOut) {
+        if (isLeaf(T)) {
+            T->code = code;
+            fileOut << T->chStr << ' ' << T->code << endl;
+        }
+        else {
+            getCode(T->left, code + "0", fileOut);
+            getCode(T->right, code + "1", fileOut);
+        }
+    }
+
+    bool isLeaf(TNode *T) {
+        if (T->left == NULL && T->right == NULL) {
+            return true;
+        }
+        return false;
+    }
+
+    void preOrderTraversal(TNode *T, ofstream &fileOut) {
+        if (T == NULL) { return; }
+        else {
+            printNode(T, fileOut);
+            preOrderTraversal(T->left, fileOut);
+            preOrderTraversal(T->right, fileOut);
+        }
+    }
+
+    void inOrderTraversal(TNode *T, ofstream &fileOut) {
+        if (T == NULL) { return; }
+        else {
+            inOrderTraversal(T->left, fileOut);
+            printNode(T, fileOut);
+            inOrderTraversal(T->right, fileOut);
+        }
+    }
+
+    void postOrderTraversal(TNode *T, ofstream &fileOut) {
+        if (T == NULL) { return; }
+        else {
+            postOrderTraversal(T->left, fileOut);
+            postOrderTraversal(T->right, fileOut);
+            printNode(T, fileOut);
+        }
+    }
+
+    void printNode(TNode *T, ofstream &fileOut) {
+        fileOut << T->chStr << ' ' << T->prob << endl;
+    }
+
 };
 
 int main(int argc, char** argv) {
@@ -127,7 +174,13 @@ int main(int argc, char** argv) {
     fileIn2.open(argv[1]);
     HuffBinTree test = HuffBinTree();
     test.constructHuffmanLList(fileIn2, fileOut5);
+    fileOut5 << '\n';
     test.constructHuffmanBinTree(dummy, fileOut5);
+    fileOut5 << '\n';
+    test.getCode(test.root, "", fileOut5);
+    test.preOrderTraversal(test.root, fileOut2);
+    test.inOrderTraversal(test.root, fileOut3);
+    test.postOrderTraversal(test.root, fileOut4);
 
     fileOut1.close();
     fileOut2.close();
