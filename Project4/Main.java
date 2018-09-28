@@ -4,7 +4,7 @@ import java.util.Scanner;
 class Main {
 
     public static void main(String[] args) {
-        int currVal = -1, nextVal = -1, count, r, c = 0;
+        int currVal = -1, nextVal = -1, count, r, c;
         RunLength value = new RunLength();
 
 
