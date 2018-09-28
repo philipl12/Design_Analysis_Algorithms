@@ -4,7 +4,7 @@ import java.util.Scanner;
 class Main {
 
     public static void main(String[] args) {
-        int currVal, nextVal, count, r, c;
+        int currVal, nextVal, count, r, c = 1;
         RunLength value = new RunLength();
 
 
@@ -21,23 +21,27 @@ class Main {
             value.minVal = Integer.parseInt(tempArray[2]);
             value.maxVal = Integer.parseInt(tempArray[3]);
 
-            for (r = 0; r < value.numRows; r++) {
-                c = 0;
+            for (r = 1; r <= value.numRows; r++) {
+                //c = 1;
                 count = 0;
                 currVal = inFile.nextInt();
-                out.write(r + " " + c + " " + currVal + " ");
+                out.write(r + " " + 1 + " " + currVal + " ");
                 count++;
-                for (c = 0; c < value.numCols;) {
-                    c++;
-                    nextVal = inFile.nextInt();
+                for (c = 1; c <= value.numCols; c++) {
+                    //c++;
+                    if(inFile.hasNext()) nextVal = inFile.nextInt();
+                    else { break; }
                     if (nextVal == currVal) count++;
                     else {
                         out.write(count + "\n");
                         currVal = nextVal;
                         count = 1;
                         out.write(r + " " + c + " " + currVal + " ");
+
                     }
+
                 }
+                c = 1;
             }
 
 /*
@@ -67,6 +71,7 @@ class Main {
             out.close();
         } catch (Exception e) {
             System.out.println("No file");
+            e.printStackTrace();
         }
     }
 }
