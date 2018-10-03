@@ -154,6 +154,7 @@ int main(int argc, char** argv) {
     int charCounts[256];
     char charCode[256];
     string fileName = "";
+    HuffBinTree dummy = HuffBinTree();
 
     ifstream inFile1, inFile2;
     ofstream outFile1, outFile2, outFile3, outFile4;
@@ -172,6 +173,8 @@ int main(int argc, char** argv) {
 
     computeCount(inFile1, charCounts);
     printAry(outFile4, charCounts);
+    dummy.constructHuffmanLList(charCounts, outFile4);
+    //dummy.constructHuffmanBinTree(dummy.root, outFile4);
 
     inFile1.close();
     inFile2.close();
