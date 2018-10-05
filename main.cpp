@@ -67,10 +67,9 @@ public:
         root = new TNode();
     }
 
-    void constructHuffmanLList(int charCounts[256], ofstream &outFile) {
+    void constructHuffmanLList(int charCounts[256], LList dummy, ofstream &outFile) {
         string chStr;
         int prob;
-        LList dummy = LList();
 
         for (int i = 0; i < 256; i++) {
             if (charCounts[i] > 0) {
@@ -86,7 +85,7 @@ public:
 
     }
 
-    void constructHuffmanBinTree(LList dummy, ofstream &outFile) {
+    void constructHuffmanBinTree(LList dummy, ofstream &fileOut) {
         TNode *spot = dummy.listHead->next;
 
         while(spot->next != NULL) {
@@ -96,20 +95,21 @@ public:
             newNode->left = spot;
             newNode->right = spot->next;
             dummy.insertOneNode(spot, newNode);
-            dummy.printList(dummy.listHead, outFile);
+            dummy.printList(dummy.listHead, fileOut);
             spot = spot->next->next;
             root = newNode;
         }
     }
 
-    void getCode(TNode *T, string code, ofstream &outFile) {
+    void getCode(TNode *T, string code, int charCounts[256]) {
         if (isLeaf(T)) {
             T->code = code;
-            outFile << T->chStr << ' ' << T->code << endl;
+            int index = (int)T->chStr;
+            charCounts[index] = code;
         }
         else {
-            getCode(T->left, code + "0", outFile);
-            getCode(T->right, code + "1", outFile);
+            getCode(T->left, code + "0", int charCounts[256]);
+            getCode(T->right, code + "1", int charCounts[256]);
         }
     }
 
@@ -147,14 +147,26 @@ void computeCount(ifstream &inFile1, int charCounts[256]) {
             }
         }
     }
+}
 
+void encode(ifstream &inFile, ofstream &outFile, char charCode[256]) {
+    char charIn;
+    int index = 0, code = 0;
+
+    while (!inFile.eof()) {
+        inFile.get(charIn);
+        index = (int)charIn;
+        code = charCode[index];
+        outFile2 << code << endl;
+    }
 }
 
 int main(int argc, char** argv) {
     int charCounts[256];
     char charCode[256];
     string fileName = "";
-    HuffBinTree dummy = HuffBinTree();
+    LList dummy = LList();
+    HuffBinTree test = HuffBinTree();
 
     ifstream inFile1, inFile2;
     ofstream outFile1, outFile2, outFile3, outFile4;
@@ -173,8 +185,9 @@ int main(int argc, char** argv) {
 
     computeCount(inFile1, charCounts);
     printAry(outFile4, charCounts);
-    dummy.constructHuffmanLList(charCounts, outFile4);
-    //dummy.constructHuffmanBinTree(dummy.root, outFile4);
+    test.constructHuffmanLList(charCounts, dummy, outFile4);
+    test.constructHuffmanBinTree(dummy, outFile4);
+    encode(inFile2, outFile2);
 
     inFile1.close();
     inFile2.close();
