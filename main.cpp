@@ -71,7 +71,7 @@ public:
         string chStr;
         int prob;
 
-        for (int i = 0; i < 256; i++) {
+        for (int i = 10; i < 256; i++) {
             if (charCounts[i] > 0) {
                 chStr = (char)i;
                 prob = charCounts[i];
@@ -144,7 +144,7 @@ public:
             if(nextBit == '0') {
                 decode(inFile, outFile, T->left);
             }
-            else if (nextBit == '1') {
+            if (nextBit == '1') {
                 decode(inFile, outFile, T->right);
             }
         }
@@ -153,8 +153,9 @@ public:
 };
 
 void printAry(ofstream &outFile4, int charCounts[256]) {
-    for (int i = 32; i < 256; i++) {
+    for (int i = 10; i < 256; i++) {
         if (charCounts[i] > 0) {
+
             outFile4 << (char)i << "   #" << charCounts[i] << endl;
         }
     }
@@ -166,10 +167,10 @@ void computeCount(ifstream &inFile1, int charCounts[256]) {
     while (!inFile1.eof()) {
         inFile1.get(charIn);
 
-        for (int i = 0; i < 256; i++) {
+        for (int i = 10; i < 256; i++) {
             if ((int)charIn == i) {
                 charCounts[i]++;
-                break;
+                //break;
             }
         }
     }
@@ -177,13 +178,14 @@ void computeCount(ifstream &inFile1, int charCounts[256]) {
 
 void encode(ifstream &inFile, ofstream &outFile, string charCode[256]) {
     char charIn;
-    int index = 0, count = 1;
+    unsigned int index = 0, count = 1;
     string code;
 
-    while (!inFile.eof()) {
+    while (!inFile.eof() && index < 256) {
         inFile.get(charIn);
         cout << charIn << endl;
-        index = (int)charIn;
+        index = (unsigned int)charIn;
+        cout << index << endl;
         code = charCode[index];
         outFile << code;
         cout << "encode pass " << count++ << endl;
