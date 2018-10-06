@@ -82,7 +82,6 @@ public:
             }
         }
         dummy.printList(dummy.listHead, outFile);
-
     }
 
     void constructHuffmanBinTree(LList dummy, ofstream &fileOut) {
@@ -95,21 +94,26 @@ public:
             newNode->left = spot;
             newNode->right = spot->next;
             dummy.insertOneNode(spot, newNode);
-            dummy.printList(dummy.listHead, fileOut);
             spot = spot->next->next;
             root = newNode;
         }
+        dummy.printList(dummy.listHead, fileOut);
     }
 
-    void getCode(TNode *T, string code, int charCounts[256]) {
+    void getCode(TNode *T, string code, string charCode[256]) {
+        int index;
+        char tempChar[1];
+        tempChar[0] = T->chStr[0];
+        index = (int)tempChar[0];
+
+
         if (isLeaf(T)) {
             T->code = code;
-            int index = (int)T->chStr;
-            charCounts[index] = code;
+            charCode[index] = code;
         }
         else {
-            getCode(T->left, code + "0", int charCounts[256]);
-            getCode(T->right, code + "1", int charCounts[256]);
+            getCode(T->left, code + "0", charCode);
+            getCode(T->right, code + "1", charCode);
         }
     }
 
@@ -122,6 +126,28 @@ public:
 
     void printNode(TNode *T, ofstream &outFile) {
         outFile << T->chStr << ' ' << T->prob << endl;
+    }
+
+    void decode(ifstream &inFile, ofstream &outFile, TNode *T) {
+        char nextBit;
+
+        if (isLeaf(T)) {
+            outFile << T->chStr;
+            decode(inFile, outFile, root);
+        }
+        else if (inFile.eof()) {
+            cout << "The encode file is corrupted\n";
+            exit(1);
+        }
+        else {
+            inFile.get(nextBit);
+            if(nextBit == '0') {
+                decode(inFile, outFile, T->left);
+            }
+            else if (nextBit == '1') {
+                decode(inFile, outFile, T->right);
+            }
+        }
     }
 
 };
@@ -149,31 +175,36 @@ void computeCount(ifstream &inFile1, int charCounts[256]) {
     }
 }
 
-void encode(ifstream &inFile, ofstream &outFile, char charCode[256]) {
+void encode(ifstream &inFile, ofstream &outFile, string charCode[256]) {
     char charIn;
-    int index = 0, code = 0;
+    int index = 0, count = 1;
+    string code;
 
     while (!inFile.eof()) {
         inFile.get(charIn);
+        cout << charIn << endl;
         index = (int)charIn;
         code = charCode[index];
-        outFile2 << code << endl;
+        outFile << code;
+        cout << "encode pass " << count++ << endl;
+
     }
 }
 
+
 int main(int argc, char** argv) {
     int charCounts[256];
-    char charCode[256];
-    string fileName = "";
+    string charCode[256];
+    string fileName;
     LList dummy = LList();
     HuffBinTree test = HuffBinTree();
 
-    ifstream inFile1, inFile2;
+    ifstream inFile1, inFile2, inFile3;
     ofstream outFile1, outFile2, outFile3, outFile4;
 
     for (int i = 0; i < 256; i++) {
         charCounts[i] = 0;
-        charCode[i] = ' ';
+        charCode[i] = "";
     }
 
     inFile1.open(argv[1]);
@@ -184,13 +215,20 @@ int main(int argc, char** argv) {
     outFile4.open(argv[6]);
 
     computeCount(inFile1, charCounts);
-    printAry(outFile4, charCounts);
+    printAry(outFile1, charCounts);
     test.constructHuffmanLList(charCounts, dummy, outFile4);
+    outFile4 << "\n";
     test.constructHuffmanBinTree(dummy, outFile4);
-    encode(inFile2, outFile2);
+    test.getCode(test.root, "", charCode);
+    //encode(inFile2, outFile2, charCode);
+    cout << "Enter a file to be decoded:";
+    cin >> fileName;
+    inFile3.open(fileName);
+    test.decode(inFile3, outFile3, test.root);
 
     inFile1.close();
     inFile2.close();
+    inFile3.close();
     outFile1.close();
     outFile2.close();
     outFile3.close();
