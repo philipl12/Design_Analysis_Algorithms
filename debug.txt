@@ -12,8 +12,4 @@ l, 885, t --> t, 936, a --> a, 936, A-.0xRNwvbSI)(83WHGF?TB"L --> A-.0xRNwvbSI)(
 l --> of
 l, 1740, ta --> ta, 1872,   -->  , 1986, A-.0xRNwvbSI)(83WHGF?TB"Le --> A-.0xRNwvbSI)(83WHGF?TB"Le, 2151, yM:D1cudsr --> yM:D1cudsr, 2580, ik,COEU;qYz2!95VP6/J7jpnhgm --> ik,COEU;qYz2!95VP6/J7jpnhgm, 3039, of
 lta --> of
-lta, 3612,  A-.0xRNwvbSI)(83WHGF?TB"Le -->  A-.0xRNwvbSI)(83WHGF?TB"Le, 4137, yM:D1cudsrik,COEU;qYz2!95VP6/J7jpnhgm --> yM:D1cudsrik,COEU;qYz2!95VP6/J7jpnhgm, 5619, of
-lta A-.0xRNwvbSI)(83WHGF?TB"Le --> of
-lta A-.0xRNwvbSI)(83WHGF?TB"Le, 7749, yM:D1cudsrik,COEU;qYz2!95VP6/J7jpnhgmof
-lta A-.0xRNwvbSI)(83WHGF?TB"Le --> yM:D1cudsrik,COEU;qYz2!95VP6/J7jpnhgmof
-lta A-.0xRNwvbSI)(83WHGF?TB"Le, 13368, NULL --> NULL
+lta, 3612,  A-.0xRNwvbSI)(83WHGF?TB"Le -->  A-.0xRNwvbSI)(83WHGF?TB"Le, 4137, yM:D1cudsrik,COEU;qYz2!95VP6/J7jpnhgm --> yM:D1cudsrik,COEU;qYz2!95VP6/J7jpnhgm
