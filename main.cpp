@@ -1,5 +1,6 @@
 #include <iostream>
 #include <fstream>
+#include <sys/stat.h>
 
 using namespace std;
 
@@ -190,6 +191,11 @@ void encode(ifstream &inFile, ofstream &outFile, string charCode[256]) {
     cout << endl;
 }
 
+bool exists(string& fileName) {
+    struct stat buffer;
+    return (stat (fileName.c_str(), &buffer) == 0);
+}
+
 
 int main(int argc, char** argv) {
     int charCounts[256];
@@ -227,8 +233,11 @@ int main(int argc, char** argv) {
 
     cout << "Enter a file to be decoded:";
     cin >> fileName;
-    inFile3.open(fileName);
-    test.decode(inFile3, outFile3, test.root);
+    if (exists(fileName)) {
+        inFile3.open(fileName);
+        test.decode(inFile3, outFile3, test.root);
+    }
+    else { cout << "File doesn't exist\n"; }
 
 
     inFile2.close();
