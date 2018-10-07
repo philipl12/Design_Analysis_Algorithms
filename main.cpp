@@ -71,7 +71,7 @@ public:
         string chStr;
         int prob;
 
-        for (int i = 10; i < 256; i++) {
+        for (int i = 0; i < 256; i++) {
             if (charCounts[i] > 0) {
                 chStr = (char)i;
                 prob = charCounts[i];
@@ -81,6 +81,7 @@ public:
                 dummy.insertOneNode(dummy.listHead, newNode);
             }
         }
+        cout << endl;
         dummy.printList(dummy.listHead, outFile);
     }
 
@@ -105,7 +106,6 @@ public:
         char tempChar[1];
         tempChar[0] = T->chStr[0];
         index = (int)tempChar[0];
-
 
         if (isLeaf(T)) {
             T->code = code;
@@ -153,9 +153,8 @@ public:
 };
 
 void printAry(ofstream &outFile4, int charCounts[256]) {
-    for (int i = 10; i < 256; i++) {
+    for (int i = 0; i < 256; i++) {
         if (charCounts[i] > 0) {
-
             outFile4 << (char)i << "   #" << charCounts[i] << endl;
         }
     }
@@ -167,10 +166,10 @@ void computeCount(ifstream &inFile1, int charCounts[256]) {
     while (!inFile1.eof()) {
         inFile1.get(charIn);
 
-        for (int i = 10; i < 256; i++) {
+        for (int i = 0; i < 256; i++) {
             if ((int)charIn == i) {
                 charCounts[i]++;
-                //break;
+                break;
             }
         }
     }
@@ -178,19 +177,17 @@ void computeCount(ifstream &inFile1, int charCounts[256]) {
 
 void encode(ifstream &inFile, ofstream &outFile, string charCode[256]) {
     char charIn;
-    unsigned int index = 0, count = 1;
+    unsigned int index;
     string code;
 
-    while (!inFile.eof() && index < 256) {
+    while (!inFile.eof()) {
         inFile.get(charIn);
-        cout << charIn << endl;
         index = (unsigned int)charIn;
-        cout << index << endl;
+        if (index > 127 || index < 0) continue;
         code = charCode[index];
         outFile << code;
-        cout << "encode pass " << count++ << endl;
-
     }
+    cout << endl;
 }
 
 
@@ -210,25 +207,30 @@ int main(int argc, char** argv) {
     }
 
     inFile1.open(argv[1]);
-    inFile2.open(argv[2]);
+
     outFile1.open(argv[3]);
     outFile2.open(argv[4]);
     outFile3.open(argv[5]);
     outFile4.open(argv[6]);
 
     computeCount(inFile1, charCounts);
+
+    inFile1.close();
+    inFile2.open(argv[2]);
+
     printAry(outFile1, charCounts);
     test.constructHuffmanLList(charCounts, dummy, outFile4);
     outFile4 << "\n";
     test.constructHuffmanBinTree(dummy, outFile4);
     test.getCode(test.root, "", charCode);
-    //encode(inFile2, outFile2, charCode);
+    encode(inFile2, outFile2, charCode);
+
     cout << "Enter a file to be decoded:";
     cin >> fileName;
     inFile3.open(fileName);
     test.decode(inFile3, outFile3, test.root);
 
-    inFile1.close();
+
     inFile2.close();
     inFile3.close();
     outFile1.close();
