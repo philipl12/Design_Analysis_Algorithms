@@ -1,6 +1,7 @@
 #include <iostream>
 #include <fstream>
 using namespace std;
+const int tableSize = 10;
 
 class LNode {
 public:
@@ -58,16 +59,7 @@ public:
         }
     }
 
-    void loadStack(LNode *actualTop, ifstream &inFile, ofstream &outFile) {
-        int largestNum = 0, data;
-        while (!inFile.eof()) {
-            inFile >> data;
-            if (data > largestNum) largestNum = data;
-            LNode *newNode = new LNode(data);
-            push(actualTop, newNode);
-        }
-        printStack(actualTop, outFile);
-    }
+
 
 };
 
@@ -101,18 +93,41 @@ public:
         if (someQueue.head->data == 0) return 1;
         return 0;
     }
+
+    void printQueue() {
+
+    }
+};
+
+class RadixSort {
+public:
+    int tableSize2 = tableSize;
+    LListQueue hashTable[2][tableSize];
+    int data, currentTable, previousTable, maxDigits, currentDigit;
+
+    void loadStack(LNode *actualTop, ifstream &inFile, ofstream &outFile) {
+        int largestNum = 0, data;
+        LListStack test = LListStack();
+        while (!inFile.eof()) {
+            inFile >> data;
+            if (data > largestNum) largestNum = data;
+            LNode *newNode = new LNode(data);
+            test.push(actualTop, newNode);
+        }
+        test.printStack(actualTop, outFile);
+    }
 };
 
 int main(int argc, char** argv) {
     ifstream inFile;
     ofstream outFile1, outFile2;
-    LListStack top = LListStack();
+    //create correct radix sort object
 
     inFile.open(argv[1]);
     outFile1.open(argv[2]);
     outFile2.open(argv[3]);
 
-    top.loadStack(top.top, inFile, outFile2);
+    //top.loadStack(top.top, inFile, outFile2);
 
     inFile.close();
     outFile1.close();
