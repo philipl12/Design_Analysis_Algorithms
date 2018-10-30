@@ -59,7 +59,18 @@ public:
         }
     }
 
+    void loadStack(LNode *actualTop, ifstream &inFile, ofstream &outFile) {
+        int largestNum = 0, data;
+        LNode *spot = actualTop;
 
+        while (!inFile.eof()) {
+            inFile >> data;
+            if (data > largestNum) largestNum = data;
+            LNode *newNode = new LNode(data);
+            push(spot, newNode);
+        }
+        printStack(spot, outFile);
+    }
 
 };
 
@@ -105,29 +116,20 @@ public:
     LListQueue hashTable[2][tableSize];
     int data, currentTable, previousTable, maxDigits, currentDigit;
 
-    void loadStack(LNode *actualTop, ifstream &inFile, ofstream &outFile) {
-        int largestNum = 0, data;
-        LListStack test = LListStack();
-        while (!inFile.eof()) {
-            inFile >> data;
-            if (data > largestNum) largestNum = data;
-            LNode *newNode = new LNode(data);
-            test.push(actualTop, newNode);
-        }
-        test.printStack(actualTop, outFile);
-    }
+
 };
 
 int main(int argc, char** argv) {
     ifstream inFile;
     ofstream outFile1, outFile2;
-    //create correct radix sort object
+    LListStack top = LListStack();
+
 
     inFile.open(argv[1]);
     outFile1.open(argv[2]);
     outFile2.open(argv[3]);
 
-    //top.loadStack(top.top, inFile, outFile2);
+    top.loadStack(top.top, inFile, outFile2);
 
     inFile.close();
     outFile1.close();
