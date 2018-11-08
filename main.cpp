@@ -16,7 +16,7 @@ public:
 
     class xyCoord {
     public:
-        int xCoord, yCoord, label;
+        double xCoord, yCoord, label;
     };
 
     int K, numPts = 0, numRows, numCols, minVal, maxVal, change = 0;
@@ -59,7 +59,7 @@ public:
         }
     }
 
-    void assignLabel() {
+    void assignLabel(Point pointSet[], int K) {
         int KCount = 1;
         for (int i = 0; i < numPts; i++) {
             pointSet[i].label = KCount;
@@ -68,7 +68,7 @@ public:
         }
     }
 
-    void point2Image() {
+    void point2Image(Point pointSet[], int **imgAry) {
         for (int i = 0; i < numRows; i++) {
             for (int j = 0; j < numCols; j++) {
                 imgAry[i][j] = 0;
@@ -81,8 +81,8 @@ public:
         }
     }
 
-    void printImage(ofstream &outFile) {
-
+    void printImage(ofstream &outFile, int iteration) {
+        outFile << "*** Result of iteration " << iteration << " ****\n\n";
         for (int i = 0; i < numRows; i++) {
             for (int j = 0; j < numCols; j++) {
                 if (imgAry[i][j] > 0) outFile << imgAry[i][j];
@@ -90,6 +90,7 @@ public:
             }
             outFile << endl;
         }
+        outFile << "\n\n";
     }
 
     void computeCentroids() {
@@ -121,8 +122,8 @@ public:
         */
         label = 1;
         while (label <= K) {
-            KCentroids[label].xCoord = (sumX[label]/ totalPt[label]);
-            KCentroids[label].yCoord = (sumX[label]/ totalPt[label]);
+            KCentroids[label].xCoord = ((double)sumX[label]/ totalPt[label]);
+            KCentroids[label].yCoord = ((double)sumX[label]/ totalPt[label]);
             label++;
         }
         /*
@@ -133,16 +134,52 @@ public:
         */
     }
 
-    double computeDist(Point p1, Point p2) {
+    double computeDist(Point p1, xyCoord p2) {
         int xSquared = (p2.xCoord - p1.xCoord) * (p2.xCoord - p1.xCoord);
         int ySquared = (p2.yCoord - p1.yCoord) * (p2.yCoord - p1.yCoord);
         double distance = sqrt(xSquared + ySquared);
         return distance;
     }
 
-    void kMeansClustering() {
-        int iteration = 0;
-        assignLabel();
+    void DistanceMinLabel(Point &p, xyCoord KCent[], int &change) {
+        double minDist = p.distance;
+        int minLabel = p.label, label = 1;
+
+        while (label <= K) {
+            double dist = computeDist(p, KCent[label]);
+            if (dist < minDist) {
+                minLabel = label;
+                minDist = dist;
+            }
+            label++;
+        }
+
+        if (minDist < p.distance) {
+            p.distance = minDist;
+            p.label = minLabel;
+            change++;
+        }
+
+    }
+
+    void kMeansClustering(ofstream &outFile, Point pointSet[], int K) {
+        int iteration = 1, change, index = 0;
+        assignLabel(pointSet, K);
+
+        do {
+            change = 0;
+            point2Image(pointSet, imgAry);
+            printImage(outFile, iteration);
+            while (index < numPts) {
+                DistanceMinLabel(pointSet[index], KCentroids, change);
+                index++;
+            }
+            iteration++;
+        } while(change != 0);
+
+    }
+
+    void writePtSet(ofstream &outFile) {
 
     }
 };
@@ -176,7 +213,10 @@ int main(int argc, char** argv) {
     ifstream outFile_1;
     outFile_1.open(argv[2]);
     test.loadPointSet(outFile_1);
-    //test.kMeansClustering();
+    //test.assignLabel();
+    //test.point2Image();
+    //test.printImage(outFile2, 1);
+    test.kMeansClustering(outFile2, test.pointSet, test.K);
 
     for (int i = 0; i < test.numRows; i++) delete[] test.imgAry[i];
     delete[] test.imgAry;
