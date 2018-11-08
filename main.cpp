@@ -94,9 +94,9 @@ public:
     }
 
     void computeCentroids() {
-        int *sumX = new int[K];
-        int *sumY = new int[K];
-        int *totalPt = new int[K];
+        double *sumX = new double[K + 1];
+        double *sumY = new double[K + 1];
+        double *totalPt = new double[K + 1];
         int index = 0, label;
 
         for (int i = 0; i < K; i++) {
@@ -141,9 +141,9 @@ public:
         return distance;
     }
 
-    void DistanceMinLabel(Point &p, xyCoord KCent[], int &change) {
-        double minDist = p.distance;
-        int minLabel = p.label, label = 1;
+    int DistanceMinLabel(Point &p, xyCoord KCent[], int &change) { //this is causing problems
+        double minDist = 9999;
+        int minLabel = 0, label = 1;
 
         while (label <= K) {
             double dist = computeDist(p, KCent[label]);
@@ -159,7 +159,7 @@ public:
             p.label = minLabel;
             change++;
         }
-
+        return change;
     }
 
     void kMeansClustering(ofstream &outFile, Point pointSet[], int K) {
@@ -171,7 +171,7 @@ public:
             point2Image(pointSet, imgAry);
             printImage(outFile, iteration);
             while (index < numPts) {
-                DistanceMinLabel(pointSet[index], KCentroids, change);
+                change = DistanceMinLabel(pointSet[index], KCentroids, change);
                 index++;
             }
             iteration++;
