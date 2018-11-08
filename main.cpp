@@ -85,7 +85,7 @@ public:
         outFile << "*** Result of iteration " << iteration << " ****\n\n";
         for (int i = 0; i < numRows; i++) {
             for (int j = 0; j < numCols; j++) {
-                if (imgAry[i][j] > 0) outFile << imgAry[i][j];
+                if (imgAry[i][j] > 0) outFile << imgAry[i][j] << ' ';
                 else { outFile << ' '; }
             }
             outFile << endl;
@@ -105,33 +105,20 @@ public:
             totalPt[i] = 0;
         }
 
-        while (index < numPts) {
-            label = pointSet[index].label;
-            sumX[label] += pointSet[index].xCoord;
-            sumY[label] += pointSet[index].yCoord;
-            totalPt[label]++;
-            index++;
-        }
-        /*
         for (int index = 0; index < numPts; index++) {
             label = pointSet[index].label;
             sumX[label] += pointSet[index].xCoord;
             sumY[label] += pointSet[index].yCoord;
             totalPt[label]++;
         }
-        */
+
         label = 1;
-        while (label <= K) {
-            KCentroids[label].xCoord = ((double)sumX[label]/ totalPt[label]);
-            KCentroids[label].yCoord = ((double)sumX[label]/ totalPt[label]);
-            label++;
-        }
-        /*
+
         for (label = 1; label <= K; label++) {
             KCentroids[label].xCoord = (sumX[label]/ totalPt[label]);
             KCentroids[label].yCoord = (sumX[label]/ totalPt[label]);
         }
-        */
+
     }
 
     double computeDist(Point p1, xyCoord p2) {
@@ -141,7 +128,7 @@ public:
         return distance;
     }
 
-    int DistanceMinLabel(Point &p, xyCoord KCent[], int &change) { //this is causing problems
+    int DistanceMinLabel(Point &p, xyCoord KCent[], int &change) {
         double minDist = 9999;
         int minLabel = 0, label = 1;
 
@@ -167,20 +154,27 @@ public:
         assignLabel(pointSet, K);
 
         do {
-            change = 0;
             point2Image(pointSet, imgAry);
             printImage(outFile, iteration);
+            change = 0;
+            computeCentroids();
             while (index < numPts) {
                 change = DistanceMinLabel(pointSet[index], KCentroids, change);
                 index++;
             }
+            index = 0;
             iteration++;
         } while(change != 0);
 
     }
 
     void writePtSet(ofstream &outFile) {
+        outFile << numPts << " data points\n";
+        outFile << numRows << " rows and " << numCols << " columns\n";
 
+        for (int i = 0; i < numPts; i++) {
+            outFile << pointSet[i].xCoord << ' ' << pointSet[i].yCoord << ' ' << pointSet[i].label << endl;
+        }
     }
 };
 
@@ -213,13 +207,13 @@ int main(int argc, char** argv) {
     ifstream outFile_1;
     outFile_1.open(argv[2]);
     test.loadPointSet(outFile_1);
-    //test.assignLabel();
-    //test.point2Image();
-    //test.printImage(outFile2, 1);
     test.kMeansClustering(outFile2, test.pointSet, test.K);
+    test.writePtSet(outFile3);
 
     for (int i = 0; i < test.numRows; i++) delete[] test.imgAry[i];
     delete[] test.imgAry;
+    delete[] test.pointSet;
+    delete[] test.KCentroids;
 
     inFile.close();
     outFile_1.close();
