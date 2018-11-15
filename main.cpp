@@ -11,7 +11,8 @@ public:
         Node *next = NULL;
 
         Node() {
-            jobID = jobTime = 0;
+            jobID = 0;
+            jobTime = 0;
         }
     };
 
@@ -64,21 +65,59 @@ public:
                 scheduleTable[i][j] = 0;
             }
         }
+        for (int i = 1; i < numNodes + 1; i++) {
+            for (int j = 1; j < numNodes + 1; j++) {
+                parentCount[j] += adjacencyMatrix[i][j];
+                kidCount[i] += adjacencyMatrix[i][j];
+            }
+        }
     }
 
     int getUnmarkedOrphan() {
         for (int i = 1; i < numNodes + 1; i++) {
             if (jobMarked[i] == 0 && parentCount[i] == 0) return i;
         }
-
         return -1;
     }
+
+    void insert2Open(Node *head, Node *newNode) {
+        Node *spot = findSpot(head, newNode);
+        newNode->next = spot->next;
+        spot->next = newNode;
+    }
+
+    Node* findSpot(Node *head, Node *newNode) {
+        Node *spot = head;
+        while (spot->next != NULL && spot->next->jobTime > newNode->jobTime) {
+            spot = spot->next;
+        }
+        return spot;
+    }
+
+    void printList() {
+        Node *spot = open;
+        do {
+            cout << spot->jobID << ", " << spot->jobTime << ", " << spot->next->jobID << " --> ";
+            spot = spot->next;
+            if(spot->next == NULL) {
+                cout << spot->jobID << ", " << spot->jobTime << ", NULL"  << " --> NULL\n";
+            }
+        } while(spot->next != NULL);
+    }
+
+    boolean checkJobDone() {
+        for (int i = 1; i < numNodes + 1; i++) {
+            if (jobDone[i] == 0) return true;
+        }
+        return false;
+    }
+
 };
 
 int main(int argc, char const *argv[]) {
     ifstream inFile1, inFile2;
     ofstream outFile;
-    int numNodes, procGiven, procUsed, currentTime, orphanNode = 0;
+    int numNodes, procGiven, procUsed = 0, currentTime = 0, orphanNode = 0;
     Scheduling test = Scheduling();
 
     inFile1.open(argv[1]);
@@ -109,18 +148,22 @@ int main(int argc, char const *argv[]) {
 
     test.initializeArrays();
 
-    procUsed = currentTime = 0;
+    while (test.checkJobDone()) {
+        while (orphanNode != -1 ) {
+            orphanNode = test.getUnmarkedOrphan();
+            if (orphanNode == -1) break;
+            test.jobMarked[orphanNode] = 1;
+            Scheduling::Node *newNode = new Scheduling::Node();
+            newNode->jobID = orphanNode;
+            newNode->jobTime = test.jobTimeAry[orphanNode];
+            cout << newNode->jobID << newNode->jobTime << endl;
+            test.insert2Open(test.open, newNode);
+        }
+        test.printList();
 
-    while (orphanNode != -1 ) {
-
-        orphanNode = test.getUnmarkedOrphan();
-        if (orphanNode == -1) break;
-        test.jobMarked[orphanNode] = 1;
-        Scheduling::Node *newNode = new Scheduling::Node();
-        newNode->jobID = orphanNode;
-        newNode->jobTime = test.jobTimeAry[orphanNode];
-        cout << newNode->jobID << ' ' << newNode->jobTime << endl;
+        
     }
+
 
     inFile1.close();
     inFile2.close();
