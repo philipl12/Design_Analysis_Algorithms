@@ -8,6 +8,11 @@ public:
     class Node {
     public:
         int jobID, jobTime;
+        Node *next = NULL;
+
+        Node() {
+            jobID = jobTime = 0;
+        }
     };
 
     int numNodes, totalJobTimes;
@@ -15,32 +20,31 @@ public:
     int *jobTimeAry, *processJob, *processTime, *parentCount, *kidCount, *jobDone, *jobMarked;
     Node *open;
 
+    Scheduling() {
+        open = new Node();
+    }
+
     void loadMatrix(ifstream &inFile1) {
         int i = 0, j = 0;
 
         while (inFile1 >> i >> j) {
             adjacencyMatrix[i][j] = 1;
         }
-
-        for (int i = 1; i < 7; i++) {
-            for (int j = 1; j < 7; j++) {
-                cout << adjacencyMatrix[i][j] << ' ';
-            }
-            cout << endl;
-        }
     }
 
     int computTotalTimes(ifstream &inFile2) {
-         int totalTimes = 0, job, time, garbage;
-         inFile2 >> garbage; //used to dispose of header
-         while(inFile2 >> job >> time) {
-             totalTimes += time;
-         }
-         return totalTimes;
+        int totalTimes = 0, job, time, garbage;
+        jobTimeAry = new int[numNodes + 1];
+
+        inFile2 >> garbage; //used to dispose of header
+        while(inFile2 >> job >> time) {
+            totalTimes += time;
+            jobTimeAry[job] = time;
+        }
+        return totalTimes;
     }
 
     void initializeArrays() {
-        jobTimeAry = new int[numNodes + 1];
         processJob = new int[numNodes + 1];
         processTime = new int[numNodes + 1];
         parentCount = new int[numNodes + 1];
@@ -50,7 +54,6 @@ public:
         scheduleTable = new int*[numNodes + 1];
         for (int i = 0; i < numNodes + 1; i++) scheduleTable[i] = new int[totalJobTimes + 1];
         for (int i = 0; i < numNodes + 1; i++) {
-            jobTimeAry[i] = 0;
             processJob[i] = 0;
             processTime[i] = 0;
             parentCount[i] = 0;
@@ -62,12 +65,20 @@ public:
             }
         }
     }
+
+    int getUnmarkedOrphan() {
+        for (int i = 1; i < numNodes + 1; i++) {
+            if (jobMarked[i] == 0 && parentCount[i] == 0) return i;
+        }
+
+        return -1;
+    }
 };
 
 int main(int argc, char const *argv[]) {
     ifstream inFile1, inFile2;
     ofstream outFile;
-    int numNodes, procGiven;
+    int numNodes, procGiven, procUsed, currentTime, orphanNode = 0;
     Scheduling test = Scheduling();
 
     inFile1.open(argv[1]);
@@ -86,8 +97,8 @@ int main(int argc, char const *argv[]) {
     test.loadMatrix(inFile1);
     test.totalJobTimes = test.computTotalTimes(inFile2);
 
-    cout << "Enter processor time: ";
-    cin >> procGiven;
+    //cout << "Enter processor time: ";
+    //cin >> procGiven;
     if (procGiven <= 0) {
         cout << "Processors cannot be less than 1.\n";
         exit(1);
@@ -97,6 +108,19 @@ int main(int argc, char const *argv[]) {
     }
 
     test.initializeArrays();
+
+    procUsed = currentTime = 0;
+
+    while (orphanNode != -1 ) {
+
+        orphanNode = test.getUnmarkedOrphan();
+        if (orphanNode == -1) break;
+        test.jobMarked[orphanNode] = 1;
+        Scheduling::Node *newNode = new Scheduling::Node();
+        newNode->jobID = orphanNode;
+        newNode->jobTime = test.jobTimeAry[orphanNode];
+        cout << newNode->jobID << ' ' << newNode->jobTime << endl;
+    }
 
     inFile1.close();
     inFile2.close();
