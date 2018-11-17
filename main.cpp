@@ -25,6 +25,13 @@ public:
         open = new Node();
     }
 
+    bool checkJobDone() {
+        for (int i = 1; i < numNodes + 1; i++) {
+            if (jobDone[i] == 0) return true;
+        }
+        return false;
+    }
+
     void loadMatrix(ifstream &inFile1) {
         int i = 0, j = 0;
 
@@ -35,7 +42,7 @@ public:
 
     int computTotalTimes(ifstream &inFile2) {
         int totalTimes = 0, job, time, garbage;
-        jobTimeAry = new int[numNodes + 1];
+        jobTimeAry = new int[numNodes + 1]();
 
         inFile2 >> garbage; //used to dispose of header
         while(inFile2 >> job >> time) {
@@ -46,14 +53,15 @@ public:
     }
 
     void initializeArrays() {
-        processJob = new int[numNodes + 1];
-        processTime = new int[numNodes + 1];
-        parentCount = new int[numNodes + 1];
-        kidCount = new int[numNodes + 1];
-        jobDone = new int[numNodes + 1];
-        jobMarked = new int[numNodes + 1];
-        scheduleTable = new int*[numNodes + 1];
-        for (int i = 0; i < numNodes + 1; i++) scheduleTable[i] = new int[totalJobTimes + 1];
+        processJob = new int[numNodes + 1]();
+        processTime = new int[numNodes + 1]();
+        parentCount = new int[numNodes + 1]();
+        kidCount = new int[numNodes + 1]();
+        jobDone = new int[numNodes + 1]();
+        jobMarked = new int[numNodes + 1]();
+        scheduleTable = new int*[numNodes + 1]();
+        for (int i = 0; i < numNodes + 1; i++) scheduleTable[i] = new int[totalJobTimes + 1]();
+/*
         for (int i = 0; i < numNodes + 1; i++) {
             processJob[i] = 0;
             processTime[i] = 0;
@@ -65,6 +73,7 @@ public:
                 scheduleTable[i][j] = 0;
             }
         }
+*/
         for (int i = 1; i < numNodes + 1; i++) {
             for (int j = 1; j < numNodes + 1; j++) {
                 parentCount[j] += adjacencyMatrix[i][j];
@@ -105,19 +114,18 @@ public:
         } while(spot->next != NULL);
     }
 
-    boolean checkJobDone() {
-        for (int i = 1; i < numNodes + 1; i++) {
-            if (jobDone[i] == 0) return true;
+    int findProcessor(int pG) {
+        for (int i = 1; i <= pG; i++) {
+            if (processTime[i] <= 0) return i;
         }
-        return false;
+        return -1;
     }
-
 };
 
 int main(int argc, char const *argv[]) {
     ifstream inFile1, inFile2;
     ofstream outFile;
-    int numNodes, procGiven, procUsed = 0, currentTime = 0, orphanNode = 0;
+    int numNodes, availProc, procGiven, procUsed = 0, currentTime = 0, orphanNode = 0;
     Scheduling test = Scheduling();
 
     inFile1.open(argv[1]);
@@ -125,19 +133,21 @@ int main(int argc, char const *argv[]) {
     outFile.open(argv[3]);
 
     inFile1 >> numNodes;
-    test.adjacencyMatrix = new int*[test.numNodes + 1];
-    for (int i = 0; i < numNodes + 1; i++) test.adjacencyMatrix[i] = new int[numNodes + 1];
+    test.adjacencyMatrix = new int*[numNodes + 1];
+    for (int i = 0; i < numNodes + 1; i++) test.adjacencyMatrix[i] = new int[numNodes + 1]();
+/*
     for (int i = 0; i < numNodes + 1; i++) {
         for (int j = 0; j < numNodes + 1; j++) {
             test.adjacencyMatrix[i][j] = 0;
         }
     }
+*/
     test.numNodes = numNodes;
     test.loadMatrix(inFile1);
     test.totalJobTimes = test.computTotalTimes(inFile2);
 
-    //cout << "Enter processor time: ";
-    //cin >> procGiven;
+    cout << "Enter processor time: ";
+    cin >> procGiven;
     if (procGiven <= 0) {
         cout << "Processors cannot be less than 1.\n";
         exit(1);
@@ -156,12 +166,16 @@ int main(int argc, char const *argv[]) {
             Scheduling::Node *newNode = new Scheduling::Node();
             newNode->jobID = orphanNode;
             newNode->jobTime = test.jobTimeAry[orphanNode];
-            cout << newNode->jobID << newNode->jobTime << endl;
+            //cout << newNode->jobID << newNode->jobTime << endl;
             test.insert2Open(test.open, newNode);
         }
-        test.printList();
-
-        
+        //test.printList();
+        availProc = test.findProcessor(procGiven);
+        //cout << availProc << endl;
+        if (availProc > 0) {
+            procUsed++;
+            //Node *newJob =
+        }
     }
 
 
