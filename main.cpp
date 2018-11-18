@@ -25,9 +25,9 @@ public:
         open = new Node();
     }
 
-    bool checkJobDone(int someArray[]) {
+    bool checkJobDone() {
         for (int i = 1; i < numNodes + 1; i++) {
-            if (someArray[i] == 0) return true;
+            if (jobDone[i] <= 0) return true;
         }
         return false;
     }
@@ -61,19 +61,6 @@ public:
         jobMarked = new int[numNodes + 1]();
         scheduleTable = new int*[numNodes + 1]();
         for (int i = 0; i < numNodes + 1; i++) scheduleTable[i] = new int[totalJobTimes + 1]();
-/*
-        for (int i = 0; i < numNodes + 1; i++) {
-            processJob[i] = 0;
-            processTime[i] = 0;
-            parentCount[i] = 0;
-            kidCount[i] = 0;
-            jobDone[i] = 0;
-            jobMarked[i] = 0;
-            for (int j = 0; j < totalJobTimes + 1; j++) {
-                scheduleTable[i][j] = 0;
-            }
-        }
-*/
         for (int i = 1; i < numNodes + 1; i++) {
             for (int j = 1; j < numNodes + 1; j++) {
                 parentCount[j] += adjacencyMatrix[i][j];
@@ -121,35 +108,44 @@ public:
         } while(spot->next != NULL);
     }
 
-    int findProcessor(int pG) {
-        for (int i = 1; i <= pG; i++) {
+    int findProcessor(int procGiven) {
+        for (int i = 1; i <= procGiven; i++) {
             if (processTime[i] <= 0) return i;
         }
         return -1;
     }
 
     void updateTable(int availProc, int currentTime, Node *newJob) {
-        //int expectedTime = currentTime + newJob->jobTime;
         for (int i = currentTime; i <= (currentTime + newJob->jobTime); i++) {
             scheduleTable[availProc][i] = newJob->jobTime;
+            cout << scheduleTable[availProc][i] << " line 121\n";
         }
     }
 
-    int checkCycle() {
-        if (open->next == NULL) {
-            if (checkJobDone(jobDone)) {
-                if (checkJobDone(processTime)) return 1;
-            }
+    bool checkAllJobs(int currentTime, int procGiven) {
+        for (int i = 0; i < procGiven; i++) {
+            if (scheduleTable[i][currentTime] != 0) return false;
         }
+        return true;
+    }
+
+    int checkCycle(int currentTime, int procGiven) {
+        if (open->next == NULL && checkJobDone() && checkAllJobs(currentTime, procGiven)) return 1;
         return 0;
     }
 
-    void printTable(ofstream &outFile, int procGiven) {
+    void printTable(ofstream &outFile, int procGiven, int currentTime) {
         for (int i = 0; i <= procGiven; i++) {
-            if (i > 0) cout << "P(" << i << ")";
-            for (int j = 0; j <= totalJobTimes; j++) {
-
+            if (i > 0) cout << "P(" << i << ")|";
+            else { cout << "     "; }
+            for (int j = 0; j <= currentTime; j++) {
+                if (i == 0) cout << "-" << j << "--\n";
+                else if (scheduleTable[i][j] != 0) {
+                    cout << " " << scheduleTable[i][j] << " |";
+                }
+                else { cout << " - |"; }
             }
+            cout << endl;
         }
     }
 };
@@ -168,13 +164,7 @@ int main(int argc, char const *argv[]) {
     inFile1 >> numNodes;
     test.adjacencyMatrix = new int*[numNodes + 1];
     for (int i = 0; i < numNodes + 1; i++) test.adjacencyMatrix[i] = new int[numNodes + 1]();
-/*
-    for (int i = 0; i < numNodes + 1; i++) {
-        for (int j = 0; j < numNodes + 1; j++) {
-            test.adjacencyMatrix[i][j] = 0;
-        }
-    }
-*/
+
     test.numNodes = numNodes;
     test.loadMatrix(inFile1);
     test.totalJobTimes = test.computTotalTimes(inFile2);
@@ -191,7 +181,7 @@ int main(int argc, char const *argv[]) {
 
     test.initializeArrays();
 
-    while (test.checkJobDone(test.jobDone)) {
+    while (test.checkJobDone()) {
         while (orphanNode != -1 ) {
             orphanNode = test.getUnmarkedOrphan();
             if (orphanNode == -1) break;
@@ -213,13 +203,16 @@ int main(int argc, char const *argv[]) {
                 test.updateTable(availProc, currentTime, newJob);
             }
         }
-/*
-        if (test.checkCycle() >= 1) {
+        if (test.checkCycle(currentTime, procGiven) >= 1) {
             cout << "Cycle in the graph\n";
             exit(1);
         }
-*/
-        test.printTable(outFile1, procGiven);
+        test.printTable(outFile1, procGiven, currentTime);
+        currentTime++;
+        for (int i = 1; i < numNodes + 1; i++) {
+            test.processTime[i]--;
+        }
+        
     }
 
 
