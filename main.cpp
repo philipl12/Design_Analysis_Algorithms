@@ -26,6 +26,12 @@ public:
     }
 
     bool checkJobDone() {
+        /*
+        *fix this method
+        *needs to make sure all indices are 1
+        *currently returns false on the first indice
+        *
+        */
         for (int i = 1; i < numNodes + 1; i++) {
             if (jobDone[i] <= 0) return true;
         }
@@ -118,7 +124,7 @@ public:
     void updateTable(int availProc, int currentTime, Node *newJob) {
         for (int i = currentTime; i <= (currentTime + newJob->jobTime); i++) {
             scheduleTable[availProc][i] = newJob->jobTime;
-            cout << scheduleTable[availProc][i] << " line 121\n";
+//            cout << scheduleTable[availProc][i] << " line 121\n";
         }
     }
 
@@ -136,16 +142,40 @@ public:
 
     void printTable(ofstream &outFile, int procGiven, int currentTime) {
         for (int i = 0; i <= procGiven; i++) {
-            if (i > 0) cout << "P(" << i << ")|";
-            else { cout << "     "; }
+            if (i > 0) outFile << "P(" << i << ")|";
+            else { outFile << "     "; }
             for (int j = 0; j <= currentTime; j++) {
-                if (i == 0) cout << "-" << j << "--\n";
+                if (i == 0) outFile << "-" << j << "--";
                 else if (scheduleTable[i][j] != 0) {
-                    cout << " " << scheduleTable[i][j] << " |";
+                    outFile << " " << scheduleTable[i][j] << " |";
                 }
-                else { cout << " - |"; }
+                else { outFile << " - |"; }
             }
-            cout << endl;
+            outFile << endl;
+        }
+    }
+
+    int findDoneJob(int currentTime, int procGiven) {
+        int jobID = 0;
+//        test.processJob[availProc] = newJob->jobID;
+//        test.processTime[availProc] = newJob->jobTime;
+        for (int i = 1; i < numNodes + 1; i++) {
+            if (processTime[i] == 0) {
+                jobID = processJob[i];
+                processJob[i] = 0;
+                return jobID;
+            }
+        }
+        return -1;
+    }
+
+    void deleteNode(int job) {
+        jobDone[job] = 1;
+    }
+
+    void deleteEdge(int job) {
+        for (int i = 1; i < numNodes + 1; i++) {
+            if (adjacencyMatrix[job][i] > 0) parentCount[i]--;
         }
     }
 };
@@ -153,7 +183,7 @@ public:
 int main(int argc, char const *argv[]) {
     ifstream inFile1, inFile2;
     ofstream outFile1, outFile2;
-    int numNodes, availProc, procGiven, procUsed = 0, currentTime = 0, orphanNode = 0;
+    int job, numNodes, availProc, procGiven, procUsed = 0, currentTime = 0, orphanNode = 0;
     Scheduling test = Scheduling();
 
     inFile1.open(argv[1]);
@@ -195,11 +225,14 @@ int main(int argc, char const *argv[]) {
         test.printList();
         while (test.open->next != NULL && procUsed < procGiven) {
             availProc = test.findProcessor(procGiven);
+//            cout << availProc << "availProc"<< endl;
             if (availProc > 0) {
                 procUsed++;
                 Scheduling::Node *newJob = test.removeNode(test.open);
                 test.processJob[availProc] = newJob->jobID;
+//                cout << test.processJob[availProc] << "PJ Ary" << endl;
                 test.processTime[availProc] = newJob->jobTime;
+//                cout << test.processTime[availProc] << "PT Ary" << endl;
                 test.updateTable(availProc, currentTime, newJob);
             }
         }
@@ -209,13 +242,20 @@ int main(int argc, char const *argv[]) {
         }
         test.printTable(outFile1, procGiven, currentTime);
         currentTime++;
+        cout << currentTime << " current time\n";
         for (int i = 1; i < numNodes + 1; i++) {
             test.processTime[i]--;
         }
-        
+//        while (job >= 0) {
+            job = test.findDoneJob(currentTime, procGiven);
+//            cout << job << " job\n";
+            test.deleteNode(job);
+            test.deleteEdge(job);
+//        }
+
     }
 
-
+    test.printTable(outFile1, procGiven, currentTime);
     inFile1.close();
     inFile2.close();
     outFile1.close();
