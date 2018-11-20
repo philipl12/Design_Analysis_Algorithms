@@ -26,13 +26,8 @@ public:
     }
 
     bool checkJobDone() {
-        /*
-        *fix this method
-        *needs to make sure all indices are 1
-        *currently returns false on the first indice
-        *
-        */
         for (int i = 1; i < numNodes + 1; i++) {
+//            cout << jobDone[i] << " job num\n";
             if (jobDone[i] <= 0) return true;
         }
         return false;
@@ -157,14 +152,16 @@ public:
 
     int findDoneJob(int currentTime, int procGiven) {
         int jobID = 0;
-//        test.processJob[availProc] = newJob->jobID;
-//        test.processTime[availProc] = newJob->jobTime;
-        for (int i = 1; i < numNodes + 1; i++) {
+        for (int i = 0; i < numNodes + 1; i++) {
+//            cout << processTime[i] << endl;
+
             if (processTime[i] == 0) {
                 jobID = processJob[i];
                 processJob[i] = 0;
+//                cout << jobID << " jobID in findDoneJob\n";
                 return jobID;
             }
+
         }
         return -1;
     }
@@ -219,27 +216,25 @@ int main(int argc, char const *argv[]) {
             Scheduling::Node *newNode = new Scheduling::Node();
             newNode->jobID = orphanNode;
             newNode->jobTime = test.jobTimeAry[orphanNode];
-            //cout << newNode->jobID << newNode->jobTime << endl;
             test.insert2Open(test.open, newNode);
         }
         test.printList();
         while (test.open->next != NULL && procUsed < procGiven) {
             availProc = test.findProcessor(procGiven);
-//            cout << availProc << "availProc"<< endl;
             if (availProc > 0) {
                 procUsed++;
                 Scheduling::Node *newJob = test.removeNode(test.open);
                 test.processJob[availProc] = newJob->jobID;
-//                cout << test.processJob[availProc] << "PJ Ary" << endl;
                 test.processTime[availProc] = newJob->jobTime;
-//                cout << test.processTime[availProc] << "PT Ary" << endl;
                 test.updateTable(availProc, currentTime, newJob);
             }
         }
+
         if (test.checkCycle(currentTime, procGiven) >= 1) {
             cout << "Cycle in the graph\n";
             exit(1);
         }
+
         test.printTable(outFile1, procGiven, currentTime);
         currentTime++;
         cout << currentTime << " current time\n";
