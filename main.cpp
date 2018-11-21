@@ -29,8 +29,10 @@ public:
         for (int i = 1; i < numNodes + 1; i++) {
 //            cout << jobDone[i] << " job num\n";
             if (jobDone[i] <= 0) return true;
+//            if (jobMarked[i] != 0) return false;
         }
         return false;
+//        return true;
     }
 
     void loadMatrix(ifstream &inFile1) {
@@ -152,10 +154,10 @@ public:
 
     int findDoneJob(int currentTime, int procGiven) {
         int jobID = 0;
-        for (int i = 0; i < numNodes + 1; i++) {
+        for (int i = 0; i < procGiven + 1; i++) {
 //            cout << processTime[i] << endl;
 
-            if (processTime[i] == 0) {
+            if (processTime[i] == 0 && processJob[i] > 0) {
                 jobID = processJob[i];
                 processJob[i] = 0;
 //                cout << jobID << " jobID in findDoneJob\n";
@@ -239,7 +241,7 @@ int main(int argc, char const *argv[]) {
         currentTime++;
         cout << currentTime << " current time\n";
         for (int i = 1; i < numNodes + 1; i++) {
-            test.processTime[i]--;
+            if(test.jobMarked[i] > 0 && test.processTime[i] != 0) test.processTime[i]--;
         }
 //        while (job >= 0) {
             job = test.findDoneJob(currentTime, procGiven);
