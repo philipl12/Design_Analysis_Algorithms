@@ -27,12 +27,9 @@ public:
 
     bool checkJobDone() {
         for (int i = 1; i < numNodes + 1; i++) {
-//            cout << jobDone[i] << " job num\n";
             if (jobDone[i] <= 0) return true;
-//            if (jobMarked[i] != 0) return false;
         }
         return false;
-//        return true;
     }
 
     void loadMatrix(ifstream &inFile1) {
@@ -112,22 +109,25 @@ public:
     }
 
     int findProcessor(int procGiven) {
-        for (int i = 1; i <= procGiven; i++) {
+        for (int i = 1; i < procGiven + 1; i++) {
             if (processTime[i] <= 0) return i;
         }
         return -1;
     }
 
     void updateTable(int availProc, int currentTime, Node *newJob) {
-        for (int i = currentTime; i <= (currentTime + newJob->jobTime); i++) {
-            scheduleTable[availProc][i] = newJob->jobTime;
-//            cout << scheduleTable[availProc][i] << " line 121\n";
+        for (int i = currentTime; i < (currentTime + newJob->jobTime); i++) {
+            scheduleTable[availProc][i] = newJob->jobID;
         }
     }
 
     bool checkAllJobs(int currentTime, int procGiven) {
-        for (int i = 0; i < procGiven; i++) {
-            if (scheduleTable[i][currentTime] != 0) return false;
+//        for (int i = 0; i < procGiven; i++) {
+//            if (scheduleTable[i][currentTime] != 0) return false;
+//        }
+
+        for (int i = 0; i < numNodes + 1; i++) {
+            if(jobMarked[i] != 0) return false;
         }
         return true;
     }
@@ -152,9 +152,9 @@ public:
         }
     }
 
-    int findDoneJob(int currentTime, int procGiven) {
+    int findDoneJob(int procGiven) {
         int jobID = 0;
-        for (int i = 0; i < procGiven + 1; i++) {
+        for (int i = 1; i < procGiven + 1; i++) {
 //            cout << processTime[i] << endl;
 
             if (processTime[i] == 0 && processJob[i] > 0) {
@@ -174,7 +174,10 @@ public:
 
     void deleteEdge(int job) {
         for (int i = 1; i < numNodes + 1; i++) {
-            if (adjacencyMatrix[job][i] > 0) parentCount[i]--;
+            if (adjacencyMatrix[job][i] > 0) {
+                parentCount[i]--;
+                kidCount[job] = 0;
+            }
         }
     }
 };
@@ -243,12 +246,15 @@ int main(int argc, char const *argv[]) {
         for (int i = 1; i < numNodes + 1; i++) {
             if(test.jobMarked[i] > 0 && test.processTime[i] != 0) test.processTime[i]--;
         }
-//        while (job >= 0) {
-            job = test.findDoneJob(currentTime, procGiven);
+        for (int i = 1; i < numNodes + 1; i++) {
+            job = test.findDoneJob(procGiven);
 //            cout << job << " job\n";
-            test.deleteNode(job);
-            test.deleteEdge(job);
-//        }
+            if (job >= 0) {
+                test.deleteNode(job);
+                test.deleteEdge(job);
+            }
+
+        }
 
     }
 
