@@ -45,7 +45,7 @@ public:
         int totalTimes = 0, job, time, garbage;
         jobTimeAry = new int[numNodes + 1]();
 
-        inFile2 >> garbage; //used to dispose of header
+        inFile2 >> garbage;
         while(inFile2 >> job >> time) {
             totalTimes += time;
             jobTimeAry[job] = time;
@@ -129,27 +129,12 @@ public:
     }
 
     void updateTable(int availProc, int currentTime, Node *newJob) {
-
-        cout << availProc << ' ' << newJob->jobTime << ' ' << currentTime << endl;
-
         for (int i = currentTime; i < (currentTime + newJob->jobTime); i++) {
             scheduleTable[availProc][i] = newJob->jobID;
         }
-/*
-        for (int i = 1; i < numNodes + 1; i++) {
-            for (int j = 1; j < totalJobTimes + 1; j++) {
-                cout << scheduleTable[i][j] << ' ';
-            }
-            cout << endl;
-        }
-*/
     }
 
     bool checkAllJobs() {
-//        for (int i = 0; i < procGiven; i++) {
-//            if (scheduleTable[i][currentTime] != 0) return false;
-//        }
-
         for (int i = 1; i < numNodes + 1; i++) {
             if(jobMarked[i] != 0) return false;
         }
@@ -178,18 +163,11 @@ public:
 
     int findDoneJob(int procGiven) {
         int jobID = -1;
-/*
-        for (int i = 1; i < procGiven + 1; i++) {
-            cout << processTime[i] << "  " << i << " process time in findDoneJob\n";
-        }
-*/
-        for (int i = 1; i < procGiven + 1; i++) {
-//            cout << processTime[i] << endl;
 
+        for (int i = 1; i < procGiven + 1; i++) {
             if (processTime[i] == 0 && processJob[i] > 0) {
                 jobID = processJob[i];
                 processJob[i] = 0;
-//                cout << jobID << " jobID in findDoneJob\n";
                 return jobID;
             }
 
@@ -208,6 +186,25 @@ public:
                 kidCount[job] = 0;
             }
         }
+    }
+    void debugOut(ofstream &outFile, int currentTime) {
+        outFile << currentTime << " currentTime\n";
+        for (int i = 1; i < numNodes + 1; i++) {
+            outFile << jobMarked[i] << " ";
+        }
+        outFile << " jobMarked\n";
+        for (int i = 1; i < numNodes + 1; i++) {
+            outFile << processTime[i] << " ";
+        }
+        outFile << "processTime\n";
+        for (int i = 1; i < numNodes + 1; i++) {
+            outFile << processJob[i] << " ";
+        }
+        outFile << " processJob\n";
+        for (int i = 1; i < numNodes + 1; i++) {
+            outFile << jobDone[i] << " ";
+        }
+        outFile << " jobDone\n" << endl;
     }
 };
 
@@ -252,6 +249,7 @@ int main(int argc, char const *argv[]) {
             newNode->jobTime = test.jobTimeAry[orphanNode];
             test.insert2Open(test.open, newNode);
         }
+        orphanNode = 0;
         test.printList();
 
         while (test.open->next != NULL && procUsed < procGiven) {
@@ -272,26 +270,25 @@ int main(int argc, char const *argv[]) {
 
         test.printTable(outFile1, procGiven, currentTime);
         currentTime++;
+
         for (int i = 1; i < procGiven + 1; i++) {
-            if(test.jobMarked[i] > 0 && test.processTime[i] > 0) {
-
-//                procUsed--;
-
+            if(test.processTime[i] > 0) {
                 test.processTime[i]--;
+                if (test.processTime[i] == 0) {
+                    procUsed--;
+                }
             }
         }
 
         for (int i = 1; i < numNodes + 1; i++) {
             job = test.findDoneJob(procGiven);
-//            cout << job << " job\n";
             if (job != -1) {
                 test.deleteNode(job);
-//                cout << "deletedNode\n";
                 test.deleteEdge(job);
-//                cout << "deletedEdge\n";
             }
         }
-
+        test.printTable(outFile1, procGiven, currentTime);
+        test.debugOut(outFile2, currentTime);
     }
 
     test.printTable(outFile1, procGiven, currentTime);
