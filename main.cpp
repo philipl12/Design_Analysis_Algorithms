@@ -189,6 +189,7 @@ public:
             }
         }
     }
+    
     void debugOut(ofstream &outFile, int currentTime) {
         outFile << currentTime << " currentTime\n";
         for (int i = 1; i < numNodes + 1; i++) {
@@ -244,44 +245,34 @@ int main(int argc, char const *argv[]) {
     while (!test.checkJobDone()) {
         while (orphanNode != -1) {
             orphanNode = test.getUnmarkedOrphan();
-            cout << "hello 0.1 " << orphanNode << endl;
             if (orphanNode != -1) {
                 test.jobMarked[orphanNode] = 1;
                 Scheduling::Node *newNode = new Scheduling::Node();
                 newNode->jobID = orphanNode;
                 newNode->jobTime = test.jobTimeAry[orphanNode];
                 test.insert2Open(newNode);
-                cout << "hello 0.2\n";
             }
         }
-        cout << "hello 1.0\n";
         orphanNode = 0;
         test.printList();
-        cout << "hello 2.0\n";
 
         while (test.open->next != NULL && procUsed < procGiven) {
             availProc = test.findProcessor(procGiven);
-            cout << "hello 2.1\n";
             if (availProc > 0) {
                 procUsed++;
                 Scheduling::Node *newJob = test.removeNode();
                 test.processJob[availProc] = newJob->jobID;
                 test.processTime[availProc] = newJob->jobTime;
                 test.updateTable(availProc, currentTime, newJob);
-                cout << "hello 2.2\n";
             }
         }
-        cout << "hello 3.0\n";
 
         if (test.checkCycle(currentTime, procGiven) >= 1) {
             cout << "Cycle in the graph\n";
             exit(1);
         }
-        cout << "hello 4.0\n";
 
         test.printTable(outFile1, procGiven, currentTime);
-        cout << "hello 5.0\n";
-
         currentTime++;
 
         for (int i = 1; i < procGiven + 1; i++) {
@@ -292,25 +283,19 @@ int main(int argc, char const *argv[]) {
                 }
             }
         }
-        cout << "hello 6.0\n";
 
         for (int i = 1; i < numNodes + 1; i++) {
             job = test.findDoneJob(procGiven);
             if (job != -1) {
                 test.deleteNode(job);
                 test.deleteEdge(job);
-                cout << "hello 6.1\n";
             }
         }
-        cout << "hello 7.0\n";
         test.printTable(outFile1, procGiven, currentTime);
-        cout << "hello 8.0\n";
         test.debugOut(outFile2, currentTime);
-        cout << "hello 9.0\n";
     }
 
     test.printTable(outFile1, procGiven, currentTime);
-    cout << "print table outside of loop\n";
 
     inFile1.close();
     inFile2.close();
