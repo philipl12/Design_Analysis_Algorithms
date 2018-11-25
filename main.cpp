@@ -89,14 +89,14 @@ public:
         return -1;
     }
 
-    void insert2Open(Node *head, Node *newNode) {
-        Node *spot = findSpot(head, newNode);
+    void insert2Open(Node *newNode) {
+        Node *spot = findSpot(newNode);
         newNode->next = spot->next;
         spot->next = newNode;
     }
 
-    Node* findSpot(Node *head, Node *newNode) {
-        Node *spot = head;
+    Node* findSpot(Node *newNode) {
+        Node *spot = open;
         while (spot->next != NULL && spot->next->jobTime > newNode->jobTime) {
             spot = spot->next;
         }
@@ -112,6 +112,7 @@ public:
 
     void printList() {
         Node *spot = open;
+
         do {
             cout << spot->jobID << ", " << spot->jobTime << ", " << spot->next->jobID << " --> ";
             spot = spot->next;
@@ -119,6 +120,7 @@ public:
                 cout << spot->jobID << ", " << spot->jobTime << ", NULL"  << " --> NULL\n";
             }
         } while(spot->next != NULL);
+
     }
 
     int findProcessor(int procGiven) {
@@ -242,33 +244,44 @@ int main(int argc, char const *argv[]) {
     while (!test.checkJobDone()) {
         while (orphanNode != -1) {
             orphanNode = test.getUnmarkedOrphan();
-            if (orphanNode == -1) break;
-            test.jobMarked[orphanNode] = 1;
-            Scheduling::Node *newNode = new Scheduling::Node();
-            newNode->jobID = orphanNode;
-            newNode->jobTime = test.jobTimeAry[orphanNode];
-            test.insert2Open(test.open, newNode);
+            cout << "hello 0.1 " << orphanNode << endl;
+            if (orphanNode != -1) {
+                test.jobMarked[orphanNode] = 1;
+                Scheduling::Node *newNode = new Scheduling::Node();
+                newNode->jobID = orphanNode;
+                newNode->jobTime = test.jobTimeAry[orphanNode];
+                test.insert2Open(newNode);
+                cout << "hello 0.2\n";
+            }
         }
+        cout << "hello 1.0\n";
         orphanNode = 0;
         test.printList();
+        cout << "hello 2.0\n";
 
         while (test.open->next != NULL && procUsed < procGiven) {
             availProc = test.findProcessor(procGiven);
+            cout << "hello 2.1\n";
             if (availProc > 0) {
                 procUsed++;
                 Scheduling::Node *newJob = test.removeNode();
                 test.processJob[availProc] = newJob->jobID;
                 test.processTime[availProc] = newJob->jobTime;
                 test.updateTable(availProc, currentTime, newJob);
+                cout << "hello 2.2\n";
             }
         }
+        cout << "hello 3.0\n";
 
         if (test.checkCycle(currentTime, procGiven) >= 1) {
             cout << "Cycle in the graph\n";
             exit(1);
         }
+        cout << "hello 4.0\n";
 
         test.printTable(outFile1, procGiven, currentTime);
+        cout << "hello 5.0\n";
+
         currentTime++;
 
         for (int i = 1; i < procGiven + 1; i++) {
@@ -279,16 +292,21 @@ int main(int argc, char const *argv[]) {
                 }
             }
         }
+        cout << "hello 6.0\n";
 
         for (int i = 1; i < numNodes + 1; i++) {
             job = test.findDoneJob(procGiven);
             if (job != -1) {
                 test.deleteNode(job);
                 test.deleteEdge(job);
+                cout << "hello 6.1\n";
             }
         }
+        cout << "hello 7.0\n";
         test.printTable(outFile1, procGiven, currentTime);
+        cout << "hello 8.0\n";
         test.debugOut(outFile2, currentTime);
+        cout << "hello 9.0\n";
     }
 
     test.printTable(outFile1, procGiven, currentTime);
