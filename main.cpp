@@ -123,6 +123,9 @@ public:
         return false;
     }
 
+    void removeClose(AStarNode *oldNode) {
+        
+    }
 
     void tracePath(AStarNode *currentNode, ofstream &outFile1) {
 
@@ -132,7 +135,7 @@ public:
 int main(int argc, char const *argv[]) {
     ifstream input1;
     ofstream outFile1, outFile2;
-    int input2 = 0, input3 = 0, matrixIndex = 0;
+    int input2 = 0, input3 = 0, matrixIndex = 0, numEdgeFromStart = 0;
     AStarSearch findMe = AStarSearch();
 
     input1.open(argv[1]);
@@ -162,7 +165,18 @@ int main(int argc, char const *argv[]) {
                 AStarNode *childNode = new AStarNode(childIndex, findMe.childAry[childIndex], 0);
                 AStarNode *oldNode = new AStarNode(0, 0, 0);
                 if(!findMe.IsInCloseList(childNode, oldNode)) {
+                    AStarNode *parent = currentNode;
+                    numEdgeFromStart++;
+                    findMe.OpenInsert(childNode);
                     findMe.printOpen(outFile2);
+                }
+                else {
+                    if (childNode->fStar < oldNode->fStar) {
+                        findMe.removeClose(oldNode);
+                        AStarNode *parent = currentNode;
+                        findMe.OpenInsert(childNode);
+                        findMe.printOpen(outFile2);
+                    }
                 }
             }
         }
