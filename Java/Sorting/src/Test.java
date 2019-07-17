@@ -1,6 +1,7 @@
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintStream;
+import java.util.Arrays;
 import java.util.Random;
 
 public class Test {
@@ -35,11 +36,11 @@ public class Test {
 		int n = a .length;
 		System.out.println("Insertion sort");
 		
-		for (int i = 1; i < n - 1; i++) {
+		for (int i = 1; i < n; i++) {
 			int value = a[i], j = i - 1;
 			
 			while (j >= 0 && a[j] > value) {
-				a[j] = a[j + 1];
+				a[j + 1] = a[j];
 				j--;
 			}
 			
@@ -57,7 +58,9 @@ public class Test {
 		
 		System.setOut(out);
 		
-		int[] numTestCases = {10, 100, 1000, 10000};
+		//int[] numTestCases = {10, 100, 1000, 10000};
+		
+		int[] numTestCases = {10, 100};
 		
 		
 		try {
@@ -76,9 +79,21 @@ public class Test {
 				}
 				System.out.println();
 				*/
-				Test.bubbleSort(testArray);
+				int[] copy = Arrays.copyOf(testArray, testArray.length);
 				
-				//Test.insertionSort(testArray);
+				Test.bubbleSort(copy);
+				
+				copy = Arrays.copyOf(testArray, testArray.length);
+				
+				
+				
+				for (int h = 0; h < copy.length; h++) {
+					System.out.print(copy[h] + " ");
+				}
+				System.out.println();
+				System.out.println();
+				
+				Test.insertionSort(copy);
 				
 
 				
