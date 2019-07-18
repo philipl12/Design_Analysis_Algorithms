@@ -5,7 +5,7 @@ import java.util.Arrays;
 import java.util.Random;
 
 public class Test {
-	
+/*	
 	private static void printArray(int[] a) {
 		
 		for (int i = 0; i < a.length; i++) {
@@ -20,15 +20,15 @@ public class Test {
 		int n = a.length;
 		System.out.println("Bubble Sort");
 		
-		for (int i = 0; i < n-1; i++) 
-            for (int j = 0; j < n-i-1; j++) 
-                if (a[j] > a[j+1]) 
-                { 
+		for (int i = 0; i < n-1; i++) {
+            for (int j = 0; j < n-i-1; j++) {
+                if (a[j] > a[j+1]) { 
                     int temp = a[j]; 
                     a[j] = a[j+1]; 
                     a[j+1] = temp; 
-                } 
-		
+                }
+			}
+		}
 		printArray(a);
 	}
 	
@@ -49,7 +49,7 @@ public class Test {
 		
 		printArray(a);
 	}
-	
+*/	
 	
 	public static void main(String[] args) throws IOException {
 		Random rand = new Random();
@@ -60,7 +60,7 @@ public class Test {
 		
 		//int[] numTestCases = {10, 100, 1000, 10000};
 		
-		int[] numTestCases = {10, 100};
+		int[] numTestCases = {10, 100, 1000};
 		
 		
 		try {
@@ -81,22 +81,16 @@ public class Test {
 				*/
 				int[] copy = Arrays.copyOf(testArray, testArray.length);
 				
-				Test.bubbleSort(copy);
+				Sorts.bubbleSort(copy);
 				
 				copy = Arrays.copyOf(testArray, testArray.length);
 				
+				Sorts.insertionSort(copy);
 				
+				copy = Arrays.copyOf(testArray, testArray.length);
 				
-				for (int h = 0; h < copy.length; h++) {
-					System.out.print(copy[h] + " ");
-				}
-				System.out.println();
-				System.out.println();
-				
-				Test.insertionSort(copy);
-				
-
-				
+				Sorts.selectionSort(copy);
+							
 			}
 			
 			out.close();
@@ -105,7 +99,6 @@ public class Test {
 			System.out.println("Ran into issues");
 		}
 		
-
 	}
 
 }
