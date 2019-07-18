@@ -1,7 +1,6 @@
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintStream;
-import java.util.Arrays;
 import java.util.Random;
 
 public class Test {
@@ -67,11 +66,8 @@ public class Test {
 			for (int i = 0; i < numTestCases.length; i++) {
 				int[] testArray = new int[numTestCases[i]];
 				
-				for (int j = 0; j < testArray.length; j++) {
-					
-					testArray[j] = rand.nextInt(numTestCases[i]);
-					//System.out.print(testArray[j] + " ");
-					
+				for (int j = 0; j < testArray.length; j++) {		
+					testArray[j] = rand.nextInt(numTestCases[i]);					
 				}
 				/*
 				for (int h = 0; h < testArray.length; h++) {
@@ -79,24 +75,19 @@ public class Test {
 				}
 				System.out.println();
 				*/
-				int[] copy = Arrays.copyOf(testArray, testArray.length);
 				
-				Sorts.bubbleSort(copy);
-				
-				copy = Arrays.copyOf(testArray, testArray.length);
-				
-				Sorts.insertionSort(copy);
-				
-				copy = Arrays.copyOf(testArray, testArray.length);
-				
-				Sorts.selectionSort(copy);
+				Sorts.bubbleSort(testArray);
+				Sorts.insertionSort(testArray);	
+				Sorts.selectionSort(testArray);
+				Sorts.mergeSort(testArray);
+				Sorts.quickSort(testArray);
 							
 			}
 			
 			out.close();
 		}
 		catch (Exception e) {
-			System.out.println("Ran into issues");
+			System.out.println(e);
 		}
 		
 	}
