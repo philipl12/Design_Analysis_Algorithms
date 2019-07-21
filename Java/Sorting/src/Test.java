@@ -22,19 +22,21 @@ public class Test {
 				for (int j = 0; j < testArray.length; j++) {		
 					testArray[j] = rand.nextInt(numTestCases[i]);					
 				}
-				/*
+				/*		
+				System.out.println("Number of elements being sorted: " + numTestCases[i]);
+				System.out.println();
 				Sorts.bubbleSort(testArray);
-				Sorts.insertionSort(testArray);	
 				Sorts.selectionSort(testArray);
+				Sorts.insertionSort(testArray);
 				Sorts.mergeSort(testArray);
 				Sorts.quickSort(testArray);
 				Sorts.heapSort(testArray);
 				Sorts.countingSort(testArray);
-				
-				*/
 				Sorts.radixSort(testArray);
+				Sorts.bucketSort(testArray, numTestCases[i]);
+				*/
 				
-				
+				Sorts.cocktailSort(testArray);
 			}
 			
 			out.close();
