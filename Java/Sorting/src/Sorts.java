@@ -2,7 +2,9 @@ import java.util.Arrays;
 
 
 public class Sorts {
+	private static int counter = 0;
 	
+	//used to print the raw data in the array
 	private static void printArray(int[] a) {
 		
 		for (int i = 0; i < a.length; i++) {
@@ -13,14 +15,20 @@ public class Sorts {
 		System.out.println();
 	}
 	
+	//find max element in array
+	private static int getMax(int[] a, int n) { 
+        int max = a[0]; 
+        for (int i = 1; i < n; i++) {
+            if (a[i] > max) { max = a[i]; }
+        }
+        return max; 
+    }
+	
 	//code from https://www.geeksforgeeks.org/bubble-sort/
 	public static void bubbleSort(int[] original) {
 		int n = original.length;
 		int[] a = Arrays.copyOf(original, n);
-		
-		
-		System.out.println("Bubble Sort");
-		
+
 		for (int i = 0; i < n-1; i++) {
             for (int j = 0; j < n-i-1; j++) {
                 if (a[j] > a[j+1]) { 
@@ -30,16 +38,17 @@ public class Sorts {
                 }
 			}
 		}
+		
+		System.out.println("Bubble Sort");
 		printArray(a);
 	}
+	//end bubble sort
 	
 	//code from https://www.geeksforgeeks.org/selection-sort/
 	public static void selectionSort(int[] original) {
 		int n =  original.length;
 		int[] a = Arrays.copyOf(original, n);
-		
-		System.out.println("Selection Sort");
-		
+
 		for (int i = 0; i < n - 1; i++) {
 			int minimum = i;
 			
@@ -53,16 +62,17 @@ public class Sorts {
 			a[i] = a[minimum];
 			a[minimum] = temp;
 		}
+		
+		System.out.println("Selection Sort");
 		printArray(a);
 	}
+	//end selection sort
 	
 	//code from https://www.geeksforgeeks.org/insertion-sort/
 	public static void insertionSort(int[] original) {
 		int n = original.length;
 		int[] a = Arrays.copyOf(original, n);
-		
-		System.out.println("Insertion sort");
-		
+	
 		for (int i = 1; i < n; i++) {
 			int value = a[i], j = i - 1;
 			
@@ -74,16 +84,19 @@ public class Sorts {
 			a[j + 1] = value;
 		}
 		
+		System.out.println("Insertion sort");
 		printArray(a);
 	}
+	//end insertion sort
 	
 	//code from https://www.baeldung.com/java-merge-sort by Baeldung
 	public static void mergeSort(int[] original) {
 		int n = original.length;
 		int[] a = Arrays.copyOf(original, n);
 		
-		System.out.println("Merge sort");
 		mergeSort(a, n);
+		
+		System.out.println("Merge sort");
 		printArray(a);
 	}
 	
@@ -127,9 +140,29 @@ public class Sorts {
 	        a[k++] = rightArray[j++];
 	    }
 	}
+	//end merge sort
 	
-	
-    public static int partition(int[] a, int low, int high) { 
+	//code https://www.geeksforgeeks.org/quick-sort/
+    public static void quickSort(int[] original) {
+    	int n = original.length;
+		int[] a = Arrays.copyOf(original, n);
+		
+		quickSort(a, 0, a.length - 1);
+		
+		System.out.println("Quick sort");
+		printArray(a);
+    }
+    
+    public static void quickSort(int[] a, int low, int high) { 
+        if (low < high) {
+            int pivot = partition(a, low, high); 
+   
+            quickSort(a, low, pivot - 1); 
+            quickSort(a, pivot + 1, high); 
+        } 
+    }
+    
+    private static int partition(int[] a, int low, int high) { 
         int pivot = a[high];  
         int i = (low - 1);
         for (int j = low; j < high; j++) { 
@@ -147,26 +180,123 @@ public class Sorts {
         a[high] = temp; 
   
         return i + 1; 
+    }
+    //end quick sort
+    
+    //code from https://www.geeksforgeeks.org/heap-sort/
+    public static void heapSort(int original[]) {	
+    	int[] a = Arrays.copyOf(original, original.length);
+        int n = a.length; 
+        
+        for (int i = n / 2 - 1; i >= 0; i--) {
+            heapify(a, n, i); 
+        }
+        
+        for (int i = n - 1; i >= 0; i--) {
+            int temp = a[0]; 
+            a[0] = a[i]; 
+            a[i] = temp; 
+  
+            heapify(a, i, 0); 
+        }
+        
+        System.out.println("Heap sort");
+        printArray(a);
     } 
-    
-    public static void quickSort(int[] original) {
-    	int n = original.length;
-		int[] a = Arrays.copyOf(original, n);
-		
-		System.out.println("Quick sort");
-		quickSort(a, 0, a.length - 1);
-		printArray(a);
-    }
-    
-    public static void quickSort(int[] a, int low, int high) { 
-        if (low < high) {
-            int pivot = partition(a, low, high); 
-   
-            quickSort(a, low, pivot - 1); 
-            quickSort(a, pivot + 1, high); 
+
+    private static void heapify(int a[], int n, int i) { 
+        int largest = i;
+        int left = 2 * i + 1; 
+        int right = 2 * i + 2;
+ 
+        if (left < n && a[left] > a[largest]) {
+            largest = left; 
+        }
+        
+        if (right < n && a[right] > a[largest]) {
+            largest = right; 
+        }
+        
+        if (largest != i) { 
+            int temp = a[i]; 
+            a[i] = a[largest]; 
+            a[largest] = temp; 
+
+            heapify(a, n, largest); 
         } 
+    } 
+    //end heap sort
+    
+    //code from https://www.geeksforgeeks.org/counting-sort/
+    public static void countingSort(int[] original) { 
+    	int[] a = Arrays.copyOf(original, original.length);
+        int n = a.length;
+        int i;
+  
+        int[] output = new int[n]; 
+
+        int[] count = new int[n]; 
+        for (i = 0; i < n; ++i) 
+            count[i] = 0; 
+
+        for (i = 0; i < n; ++i) 
+            ++count[a[i]]; 
+
+        for (i = 1; i <= n - 1; ++i) 
+            count[i] += count[i-1]; 
+
+        for (i = n - 1; i >= 0; i--) 
+        { 
+            output[count[a[i]]-1] = a[i]; 
+            --count[a[i]]; 
+        } 
+  
+        for (i = 0; i < n; ++i) 
+            a[i] = output[i]; 
+        
+        System.out.println("Counting sort");
+        printArray(a);
     }
     
+    //counting sort used for radix sort
+    public static void countSort(int[] a, int n, int exp) { 
+        int[] output = new int[n];
+        int i; 
+        int[] count = new int[10]; 
+        //Arrays.fill(count,0); 
+  
+        for (i = 0; i < n; i++) {
+            count[ (a[i]/exp)%10 ]++; 
+        }
+        for (i = 1; i < 10; i++) {
+            count[i] += count[i - 1]; 
+    	}
+        for (i = n - 1; i >= 0; i--) { 
+            output[count[ (a[i]/exp)%10 ] - 1] = a[i]; 
+            count[ (a[i]/exp)%10 ]--; 
+        } 
+  
+        for (i = 0; i < n; i++) {
+            a[i] = output[i];
+        }
+    }
+    //end counting sort
+    
+    //code from https://www.geeksforgeeks.org/radix-sort/
+    public static void radixSort(int[] original) { 
+    	int[] a = Arrays.copyOf(original, original.length);
+        int n = a.length; 
+    	
+    	int maxNum = getMax(a, n); 
+ 
+        for (int exp = 1; maxNum/exp > 0; exp *= 10) {
+            countSort(a, n, exp);
+        }
+        
+        System.out.println("Radix sort");
+        printArray(a);
+    }
+    //end radix sort
     
 	public static void main(String[] args) {
 	
