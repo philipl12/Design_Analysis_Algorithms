@@ -2,8 +2,8 @@ import java.util.Arrays;
 
 
 public class Sorts {
-	private static int compare = 0;
-	private static int arrayAccess = 0;
+	public static int compare = 0;
+	public static int arrayAccess = 0;
 	
 	//used to print the raw data in the array
 	private static void printArray(int[] a) {
@@ -40,11 +40,15 @@ public class Sorts {
                     compare++;
                     arrayAccess += 6;
                 }
+                else { 
+                	compare++;
+                	arrayAccess += 2;
+                } //only done when if statement condition is checked but not true
                 compare++;
 			}
-            compare++;
+            compare += 2; //once for inner loop and once for outer loop
 		}
-		compare += 2; //for the for loops that compared but didn't enter the body
+		compare++; //for the last compare of for loop
 		
 		System.out.println("Bubble Sort");
 		System.out.println("Total comparisons: " + compare);
@@ -70,6 +74,10 @@ public class Sorts {
 					arrayAccess += 2;
 					minimum = j;
 				}
+				else { 
+					compare++;
+					arrayAccess += 2;
+				} //only done when if statement condition is checked but not true
 				compare++;
 			}
 			
@@ -77,9 +85,9 @@ public class Sorts {
 			a[i] = a[minimum];
 			a[minimum] = temp;
 			arrayAccess += 4;
-			compare++;
+			compare += 2;
 		}
-		compare += 2; //for the for loops that compared but didn't enter the body
+		compare++;
 		
 		System.out.println("Selection Sort");
 		System.out.println("Total comparisons: " + compare);
@@ -98,17 +106,16 @@ public class Sorts {
 	
 		for (int i = 1; i < n; i++) {
 			int value = a[i], j = i - 1;
-			arrayAccess++;
 			
 			while (j >= 0 && a[j] > value) {
 				a[j + 1] = a[j];
 				j--;
 				compare += 3;
-				arrayAccess += 2;
-			}
+				arrayAccess += 3;
+			} //decided to leave out compares for when while condition is false
 			
 			a[j + 1] = value;
-			arrayAccess++;
+			arrayAccess += 2;
 			compare++;
 		}
 		compare++; //for the for loops that compared but didn't enter the body
@@ -141,8 +148,10 @@ public class Sorts {
 	
 	public static void mergeSort(int[] a, int n) {
 		if (n < 2) {
+			compare++;
 	        return;
 	    }
+		else { compare++; } //only done when if statement condition is checked but not true
 		
 	    int mid = n / 2;
 	    int[] leftArray = new int[mid];
@@ -153,22 +162,24 @@ public class Sorts {
 	    	arrayAccess +=2;
 	    	compare++;
 	    }
+	    
 	    for (int i = mid; i < n; i++) {
 	    	rightArray[i - mid] = a[i];
 	    	arrayAccess += 2;
 	    	compare++;
 	    }
+	    
+	    compare += 2; //last compare of both for loops when condition becomes false
 	    mergeSort(leftArray, mid);
 	    mergeSort(rightArray, n - mid);
 	 
 	    merge(a, leftArray, rightArray, mid, n - mid);
-	    
 	}
 	
 	public static void merge(int[] a, int[] leftArray, int[] rightArray, int left, int right) {
 		int i = 0, j = 0, k = 0;
 	    
-	    while (i < left && j < right) {
+	    while (i < left && j < right) { 
 	    	compare += 3;
 	    	
 	        if (leftArray[i] <= rightArray[j]) {
@@ -179,21 +190,21 @@ public class Sorts {
 	        else {
 	            a[k++] = rightArray[j++];
 	            compare++;
-	            arrayAccess +=2;
+	            arrayAccess += 4;
 	        }
-	    }
+	    } //decided to leave out compares for when while condition is false
 	    
 	    while (i < left) {
 	        a[k++] = leftArray[i++];
 	        compare++;
 	        arrayAccess += 2;
-	    }
+	    } //decided to leave out compares for when while condition is false
 	    
 	    while (j < right) {
 	        a[k++] = rightArray[j++];
 	        compare++;
 	        arrayAccess += 2;
-	    }
+	    } //decided to leave out compares for when while condition is false
 	}
 	//end merge sort
 	
@@ -220,22 +231,32 @@ public class Sorts {
    
             quickSort(a, low, pivot - 1); 
             quickSort(a, pivot + 1, high); 
-        } 
+        }
+        else { compare++; } //only done when if statement condition is checked but not true
     }
     
     private static int partition(int[] a, int low, int high) { 
         int pivot = a[high];
         int i = (low - 1);
         for (int j = low; j < high; j++) { 
-            if (a[j] <= pivot) { 
-                i++; 
+            if (a[j] <= pivot) {
+                i++;
   
-                int temp = a[i]; 
-                a[i] = a[j]; 
-                a[j] = temp; 
-            } 
-        } 
-  
+                int temp = a[i];
+                a[i] = a[j];
+                a[j] = temp;
+                
+                compare++;
+                arrayAccess += 5;
+            }
+            else { 
+            	compare++;
+            	arrayAccess++;
+            } //only done when if statement condition is checked but not true
+            compare++;
+        }
+        compare++;
+        
         int temp = a[i + 1]; 
         a[i + 1] = a[high]; 
         a[high] = temp; 
@@ -263,7 +284,12 @@ public class Sorts {
         }
         
         System.out.println("Heap sort");
-        printArray(a);
+		System.out.println("Total comparisons: " + compare);
+		System.out.println("Total array accesses: " + arrayAccess);
+		System.out.println();
+		compare = 0;
+		arrayAccess = 0;
+        //printArray(a);
     } 
 
     private static void heapify(int a[], int n, int i) { 
@@ -272,20 +298,38 @@ public class Sorts {
         int right = 2 * i + 2;
  
         if (left < n && a[left] > a[largest]) {
-            largest = left; 
+            largest = left;
+            compare += 3;
+            arrayAccess += 2;
         }
+        else {
+        	compare += 3;
+            arrayAccess += 2;
+        } //only done when if statement condition is checked but not true
         
         if (right < n && a[right] > a[largest]) {
-            largest = right; 
+            largest = right;
+            compare += 3;
+            arrayAccess += 2;
         }
+        else {
+        	compare += 3;
+            arrayAccess += 2;
+        } //only done when if statement condition is checked but not true
         
         if (largest != i) { 
             int temp = a[i]; 
             a[i] = a[largest]; 
             a[largest] = temp; 
-
-            heapify(a, n, largest); 
-        } 
+            
+            
+            compare++;
+            arrayAccess += 4;
+            heapify(a, n, largest);
+        }
+        else {
+        	compare ++;
+        } //only done when if statement condition is checked but not true
     } 
     //end heap sort
     
@@ -298,42 +342,65 @@ public class Sorts {
 
         for (i = 0; i < n; ++i) { 
             ++count[a[i]];
+            compare++;
+            arrayAccess += 2;
         }
         for (i = 1; i <= n - 1; ++i) {
-            count[i] += count[i - 1]; 
+            count[i] += count[i - 1];
+            compare++;
+            arrayAccess += 2;
         }
         for (i = n - 1; i >= 0; i--) { 
-            output[count[a[i]]-1] = a[i]; 
-            --count[a[i]]; 
+            output[count[a[i]] - 1] = a[i];
+            --count[a[i]];
+            compare++;
+            arrayAccess += 6;
         }
         for (i = 0; i < n; ++i) {
-            a[i] = output[i]; 
+            a[i] = output[i];
+            compare++;
+            arrayAccess += 2;
         }
+        compare += 4; //for all for loops last false condition
         
         System.out.println("Counting sort");
-        printArray(a);
+		System.out.println("Total comparisons: " + compare);
+		System.out.println("Total array accesses: " + arrayAccess);
+		System.out.println();
+		compare = 0;
+		arrayAccess = 0;
+        //printArray(a);
     }
     
     //counting sort used for radix sort
-    public static void countSort(int[] a, int n, int exp) { 
+    public static void countingSort(int[] a, int n, int exp) {
         int[] output = new int[n];
         int[] count = new int[10];
         int i;
   
         for (i = 0; i < n; i++) {
-            count[ (a[i] / exp) % 10 ]++; 
+            count[(a[i] / exp) % 10]++;
+            compare++;
+            arrayAccess += 2;
         }
         for (i = 1; i < 10; i++) {
-            count[i] += count[i - 1]; 
+            count[i] += count[i - 1];
+            compare++;
+            arrayAccess += 2;
     	}
         for (i = n - 1; i >= 0; i--) { 
-            output[count[ (a[i] / exp) % 10 ] - 1] = a[i]; 
-            count[ (a[i] / exp) % 10 ]--; 
+            output[count[(a[i] / exp) % 10] - 1] = a[i];
+            count[(a[i] / exp) % 10]--;
+            compare++;
+            arrayAccess += 6;
         } 
   
         for (i = 0; i < n; i++) {
             a[i] = output[i];
+            compare++;
+            arrayAccess += 2;
         }
+        compare += 4; //for all for loops last false condition
     }
     //end counting sort
     
@@ -345,11 +412,18 @@ public class Sorts {
     	int maxNum = getMax(a, n); 
  
         for (int exp = 1; maxNum/exp > 0; exp *= 10) {
-            countSort(a, n, exp);
+            countingSort(a, n, exp);
+            compare++;
         }
+        compare++;
         
         System.out.println("Radix sort");
-        printArray(a);
+		System.out.println("Total comparisons: " + compare);
+		System.out.println("Total array accesses: " + arrayAccess);
+		System.out.println();
+		compare = 0;
+		arrayAccess = 0;
+        //printArray(a);
     }
     //end radix sort
     
@@ -361,57 +435,94 @@ public class Sorts {
 
         for (int i = 0; i < n; i++) {
            bucket[a[i]]++;
+           compare++;
+           arrayAccess += 2;
         }
    
         int outPos = 0;
         for (int i = 0; i < bucket.length; i++) {
            for (int j = 0; j < bucket[i]; j++) {
               a[outPos++] = i;
+              compare++;
+              arrayAccess += 2; //one extra for array access compare
            }
+           compare++;
         }
+        compare += 2; //for all for loops last false condition
         
         System.out.println("Bucket sort");
-        printArray(a);
+		System.out.println("Total comparisons: " + compare);
+		System.out.println("Total array accesses: " + arrayAccess);
+		System.out.println();
+		compare = 0;
+		arrayAccess = 0;
+        //printArray(a);
     }
     //end bucket sort
     
     
-    //code from
+    //code from https://www.geeksforgeeks.org/cocktail-sort/
     public static void cocktailSort(int[] original) { 
         int[] a = Arrays.copyOf(original, original.length);
         int end = a.length, start = 0;
         boolean swapped = true;
   
-        while (swapped == true) { 
-            swapped = false; 
+        while (swapped == true) {
+        	compare++; //do compare increment in case loop is broken
+            swapped = false;
   
             for (int i = start; i < end - 1; ++i) { 
-                if (a[i] > a[i + 1]) { 
-                    int temp = a[i]; 
-                    a[i] = a[i + 1]; 
-                    a[i + 1] = temp; 
-                    swapped = true; 
-                } 
-            } 
-  
-            if (swapped == false) { break; }
+                if (a[i] > a[i + 1]) {
+                    int temp = a[i];
+                    a[i] = a[i + 1];
+                    a[i + 1] = temp;
+                    swapped = true;
+                    compare++;
+                    arrayAccess += 6;
+                }
+                else {
+                	compare++;
+                	arrayAccess += 2;
+                } //only done when if statement condition is checked but not true
+                compare++;
+            }
+            compare++; //this increment pertaining to this for loop
+            
+            if (swapped == false) { 
+            	compare++;
+            	break; 
+            }
+            else { compare++; } //only done when if statement condition is checked but not true
 
             swapped = false;
-            end--; 
+            end--;
  
             for (int i = end - 1; i >= start; i--) { 
-                if (a[i] > a[i + 1]) { 
+                if (a[i] > a[i + 1]) {
                     int temp = a[i]; 
                     a[i] = a[i + 1]; 
                     a[i + 1] = temp; 
-                    swapped = true; 
-                } 
-            } 
+                    swapped = true;
+                    compare++;
+                    arrayAccess += 6;
+                }
+                else {
+                	compare++;
+                	arrayAccess += 2;
+                } //only done when if statement condition is checked but not true
+                compare++;
+            }
+            compare++; //this increment pertaining to this for loop
  
             start++;
-        }
+        } //decided to leave out compares for when while condition is false
         
-        //System.out.println("Cocktail sort");
+        System.out.println("Cocktail sort");
+		System.out.println("Total comparisons: " + compare);
+		System.out.println("Total array accesses: " + arrayAccess);
+		System.out.println();
+		compare = 0;
+		arrayAccess = 0;
         //printArray(a);
     }
     //end cocktail sort

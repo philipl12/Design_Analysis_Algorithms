@@ -22,9 +22,10 @@ public class Test {
 				for (int j = 0; j < testArray.length; j++) {		
 					testArray[j] = rand.nextInt(numTestCases[i]);					
 				}
-				/*		
+				
 				System.out.println("Number of elements being sorted: " + numTestCases[i]);
 				System.out.println();
+				
 				Sorts.bubbleSort(testArray);
 				Sorts.selectionSort(testArray);
 				Sorts.insertionSort(testArray);
@@ -34,8 +35,6 @@ public class Test {
 				Sorts.countingSort(testArray);
 				Sorts.radixSort(testArray);
 				Sorts.bucketSort(testArray, numTestCases[i]);
-				*/
-				
 				Sorts.cocktailSort(testArray);
 			}
 			
