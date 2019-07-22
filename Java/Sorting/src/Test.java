@@ -22,7 +22,7 @@ public class Test {
 				for (int j = 0; j < testArray.length; j++) {		
 					testArray[j] = rand.nextInt(numTestCases[i]);					
 				}
-				
+				/*
 				System.out.println("Number of elements being sorted: " + numTestCases[i]);
 				System.out.println();
 				
@@ -36,8 +36,16 @@ public class Test {
 				Sorts.radixSort(testArray);
 				Sorts.bucketSort(testArray, numTestCases[i]);
 				Sorts.cocktailSort(testArray);
+				System.out.println();
+				*/
 			}
-			
+			/*
+			long[] largeArray = new long[100000];
+			for (int j = 0; j < 100000; j++) {		
+				largeArray[j] = rand.nextInt(10000);
+			}
+			largeSorts.bubbleSort(largeArray);
+			*/
 			out.close();
 		}
 		catch (Exception e) {

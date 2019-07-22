@@ -1,7 +1,8 @@
 import java.util.Arrays;
+import java.util.List;
 
 
-public class Sorts {
+public class genericSorts {
 	public static int compare = 0;
 	public static int arrayAccess = 0;
 	public static long startTime;
@@ -9,7 +10,7 @@ public class Sorts {
 	public static long duration;
 	
 	//used to print the raw data in the array
-	private static void printArray(int[] a) {
+	private static <T> void printArray(T[] a) {
 		for (int i = 0; i < a.length; i++) {
 			System.out.print(a[i] + " ");
 		}
@@ -19,8 +20,8 @@ public class Sorts {
 	}
 	
 	//find max element in array
-	private static int getMax(int[] a, int n) { 
-        int max = a[0];
+	private static <T> T getMax(T[] a, int n) { 
+        T max = a[0];
         
         for (int i = 1; i < n; i++) {
             if (a[i] > max) { max = a[i]; }
@@ -108,12 +109,13 @@ public class Sorts {
 	//end selection sort
 	
 	//code from https://www.geeksforgeeks.org/insertion-sort/
-	public static void insertionSort(int[] original) {
+	public static void insertionSort(Object[] original) {
 		int n = original.length;
-		int[] a = Arrays.copyOf(original, n);
+		Object[] a = Arrays.copyOf(original, n);
 	
 		for (int i = 1; i < n; i++) {
-			int value = a[i], j = i - 1;
+			Object value = a[i];
+			int j = i - 1;
 			
 			while (j >= 0 && a[j] > value) {
 				a[j + 1] = a[j];
