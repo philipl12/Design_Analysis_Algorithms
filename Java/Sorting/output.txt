@@ -1,28 +1,20 @@
-Bubble Sort
-Total comparisons: 109
-Total array accesses: 150
-45227627748
-45227627902
-Total time in microseconds: 153
+43
+118
+4
 
-Bubble Sort
-Total comparisons: 10099
-Total array accesses: 19652
-45227628250
-45227628562
-Total time in microseconds: 312
+403
+1198
+17
 
-Bubble Sort
-Total comparisons: 1000999
-Total array accesses: 2021144
-45227628929
-45227637063
-Total time in microseconds: 8133
+4003
+11998
+166
 
-Bubble Sort
-Total comparisons: 100009999
-Total array accesses: 200184648
-45227638695
-45227759982
-Total time in microseconds: 121286
+40003
+119998
+1690
+
+400003
+1199998
+5213
 

@@ -60,7 +60,7 @@ public class Sorts {
 		System.out.println("Bubble Sort");
 		System.out.println("Total comparisons: " + compare);
 		System.out.println("Total array accesses: " + arrayAccess);
-		System.out.println("Total time in microseconds: " + duration);
+		System.out.println("Total time in milliseconds: " + duration/1000);
 		System.out.println();
 		compare = 0;
 		arrayAccess = 0;
