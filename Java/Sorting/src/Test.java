@@ -9,7 +9,6 @@ public class Test {
 	public static void main(String[] args) throws IOException {
 		Random rand = new Random();
 		PrintStream out = new PrintStream(new File("output.txt"));
-		//PrintStream console = System.out;
 		
 		System.setOut(out);
 		
@@ -23,9 +22,7 @@ public class Test {
 					testArray[j] = rand.nextInt(numTestCases[i]);					
 				}
 				
-				//System.out.println("Number of elements being sorted: " + numTestCases[i]);
-				largeSorts.radixSort(testArray);
-				/*
+				System.out.println("Number of elements being sorted: " + numTestCases[i]);
 				largeSorts.bubbleSort(testArray);
 				largeSorts.selectionSort(testArray);
 				largeSorts.insertionSort(testArray);
@@ -37,7 +34,6 @@ public class Test {
 				largeSorts.bucketSort(testArray, numTestCases[i]);
 				largeSorts.cocktailSort(testArray);
 				System.out.println();
-				*/	
 			}
 			out.close();
 		}

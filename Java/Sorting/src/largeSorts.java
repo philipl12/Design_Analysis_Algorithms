@@ -48,19 +48,16 @@ public class largeSorts {
                 	compare++;
                 	arrayAccess += 2;
                 } //only done when if statement condition is checked but not true
-                compare++;
 			}
-            compare += 2; //once for inner loop and once for outer loop
 		}
-		compare++; //for the last compare of for loop
+		
 		endTime = System.nanoTime();
 		duration = ((endTime - startTime) / 1000);
-		//duration = ((endTime - startTime) / 1000);
 		
-		//System.out.println("Bubble Sort");
-		System.out.println(compare);
-		System.out.println(arrayAccess);
-		System.out.println(duration);
+		System.out.println("Bubble Sort");
+		System.out.println("Number of comparisons: " + compare);
+		System.out.println("Number of array accesses: " + arrayAccess);
+		System.out.println("Duration in microseconds: " + duration);
 		System.out.println();
 		compare = 0;
 		arrayAccess = 0;
@@ -87,23 +84,21 @@ public class largeSorts {
 					compare++;
 					arrayAccess += 2;
 				} //only done when if statement condition is checked but not true
-				compare++;
 			}
 			
 			long temp = a[i];
 			a[i] = a[minimum];
 			a[minimum] = temp;
 			arrayAccess += 4;
-			compare += 2;
 		}
-		compare++;
+		
 		endTime = System.nanoTime();
 		duration = ((endTime - startTime) / 1000);
 		
-		//System.out.println("Selection Sort");
-		System.out.println(compare);
-		System.out.println(arrayAccess);
-		System.out.println(duration);
+		System.out.println("Selection Sort");
+		System.out.println("Number of comparisons: " + compare);
+		System.out.println("Number of array accesses: " + arrayAccess);
+		System.out.println("Duration in microseconds: " + duration);
 		System.out.println();
 		compare = 0;
 		arrayAccess = 0;
@@ -130,16 +125,15 @@ public class largeSorts {
 			
 			a[j + 1] = value;
 			arrayAccess += 2;
-			compare++;
 		}
-		compare++; //for the for loops that compared but didn't enter the body
+		
 		endTime = System.nanoTime();
 		duration = ((endTime - startTime) / 1000);
 		
-		//System.out.println("Insertion sort");
-		System.out.println(compare);
-		System.out.println(arrayAccess);
-		System.out.println(duration);
+		System.out.println("Insertion sort");
+		System.out.println("Number of comparisons: " + compare);
+		System.out.println("Number of array accesses: " + arrayAccess);
+		System.out.println("Duration in microseconds: " + duration);
 		System.out.println();
 		compare = 0;
 		arrayAccess = 0;
@@ -158,11 +152,10 @@ public class largeSorts {
 		endTime = System.nanoTime();
 		duration = ((endTime - startTime) / 1000);
 		
-		//System.out.println("Merge sort");
-		System.out.println(compare);
-		System.out.println(arrayAccess);
-		System.out.println(duration);
-		System.out.println();
+		System.out.println("Merge sort");
+		System.out.println("Number of comparisons: " + compare);
+		System.out.println("Number of array accesses: " + arrayAccess);
+		System.out.println("Duration in microseconds: " + duration);
 		compare = 0;
 		arrayAccess = 0;
 		//printArray(a);
@@ -170,10 +163,8 @@ public class largeSorts {
 	
 	public static void mergeSort(long[] a, int n) {
 		if (n < 2) {
-			compare++;
 	        return;
 	    }
-		else { compare++; } //only done when if statement condition is checked but not true
 		
 	    int mid = n / 2;
 	    long[] leftArray = new long[mid];
@@ -182,16 +173,13 @@ public class largeSorts {
 	    for (int i = 0; i < mid; i++) {
 	    	leftArray[i] = a[i];
 	    	arrayAccess +=2;
-	    	compare++;
 	    }
 	    
 	    for (int i = mid; i < n; i++) {
 	    	rightArray[i - mid] = a[i];
 	    	arrayAccess += 2;
-	    	compare++;
 	    }
 	    
-	    compare += 2; //last compare of both for loops when condition becomes false
 	    mergeSort(leftArray, mid);
 	    mergeSort(rightArray, n - mid);
 	 
@@ -201,8 +189,7 @@ public class largeSorts {
 	public static void merge(long[] a, long[] leftArray, long[] rightArray, int left, int right) {
 		int i = 0, j = 0, k = 0;
 	    
-	    while (i < left && j < right) { 
-	    	compare += 3;
+	    while (i < left && j < right) {
 	    	
 	        if (leftArray[i] <= rightArray[j]) {
 	            a[k++] = leftArray[i++];
@@ -241,11 +228,10 @@ public class largeSorts {
 		endTime = System.nanoTime();
 		duration = ((endTime - startTime) / 1000);
 		
-		//System.out.println("Quick sort");
-		System.out.println(compare);
-		System.out.println(arrayAccess);
-		System.out.println(duration);
-		System.out.println();
+		System.out.println("Quick sort");
+		System.out.println("Number of comparisons: " + compare);
+		System.out.println("Number of array accesses: " + arrayAccess);
+		System.out.println("Duration in microseconds: " + duration);
 		compare = 0;
 		arrayAccess = 0;
 		//printArray(a);
@@ -314,10 +300,10 @@ public class largeSorts {
         endTime = System.nanoTime();
 		duration = ((endTime - startTime) / 1000);
         
-        //System.out.println("Heap sort");
-		System.out.println(compare);
-		System.out.println(arrayAccess);
-		System.out.println(duration);
+        System.out.println("Heap sort");
+		System.out.println("Number of comparisons: " + compare);
+		System.out.println("Number of array accesses: " + arrayAccess);
+		System.out.println("Duration in microseconds: " + duration);
 		System.out.println();
 		compare = 0;
 		arrayAccess = 0;
@@ -375,33 +361,28 @@ public class largeSorts {
 
         for (i = 0; i < n; ++i) { 
             ++count[(int) a[i]];
-            compare++;
             arrayAccess += 2;
         }
         for (i = 1; i <= n - 1; ++i) {
             count[i] += count[i - 1];
-            compare++;
             arrayAccess += 2;
         }
         for (i = n - 1; i >= 0; i--) { 
             output[count[(int) a[i]] - 1] = (int) a[i];
             --count[(int) a[i]];
-            compare++;
             arrayAccess += 6;
         }
         for (i = 0; i < n; ++i) {
             a[i] = output[i];
-            compare++;
             arrayAccess += 2;
         }
-        compare += 4; //for all for loops last false condition
         endTime = System.nanoTime();
 		duration = ((endTime - startTime) / 1000);
         
-        //System.out.println("Counting sort");
-		System.out.println(compare);
-		System.out.println(arrayAccess);
-		System.out.println(duration);
+        System.out.println("Counting sort");
+		System.out.println("Number of comparisons: " + compare);
+		System.out.println("Number of array accesses: " + arrayAccess);
+		System.out.println("Duration in microseconds: " + duration);
 		System.out.println();
 		compare = 0;
 		arrayAccess = 0;
@@ -416,27 +397,22 @@ public class largeSorts {
   
         for (i = 0; i < n; i++) {
             count[(int) ((a[i] / exp) % 10)]++;
-            compare++;
             arrayAccess += 2;
         }
         for (i = 1; i < 10; i++) {
             count[i] += count[i - 1];
-            compare++;
             arrayAccess += 2;
     	}
         for (i = n - 1; i >= 0; i--) { 
             output[(int) (count[(int) ((a[i] / exp) % 10)] - 1)] = a[i];
             count[(int) ((a[i] / exp) % 10)]--;
-            compare++;
             arrayAccess += 6;
         } 
   
         for (i = 0; i < n; i++) {
             a[i] = output[i];
-            compare++;
             arrayAccess += 2;
         }
-        compare += 4; //for all for loops last false condition
     }
     //end counting sort
     
@@ -450,16 +426,14 @@ public class largeSorts {
  
         for (long exp = 1; maxNum/exp > 0; exp *= 10) {
             countingSort(a, n, exp);
-            compare++;
         }
-        compare++;
         endTime = System.nanoTime();
 		duration = ((endTime - startTime) / 1000);
         
-        //System.out.println("Radix sort");
-		System.out.println(compare);
-		System.out.println(arrayAccess);
-		System.out.println(duration);
+        System.out.println("Radix sort");
+		System.out.println("Number of comparisons: " + compare);
+		System.out.println("Number of array accesses: " + arrayAccess);
+		System.out.println("Duration in microseconds: " + duration);
 		System.out.println();
 		compare = 0;
 		arrayAccess = 0;
@@ -476,7 +450,6 @@ public class largeSorts {
 
         for (int i = 0; i < n; i++) {
            bucket[(int) a[i]]++;
-           compare++;
            arrayAccess += 2;
         }
    
@@ -484,19 +457,17 @@ public class largeSorts {
         for (int i = 0; i < bucket.length; i++) {
            for (int j = 0; j < bucket[i]; j++) {
               a[outPos++] = i;
-              compare++;
               arrayAccess += 2; //one extra for array access compare
            }
-           compare++;
         }
-        compare += 2; //for all for loops last false condition
+        
         endTime = System.nanoTime();
 		duration = ((endTime - startTime) / 1000);
         
-        //System.out.println("Bucket sort");
-		System.out.println(compare);
-		System.out.println(arrayAccess);
-		System.out.println(duration);
+        System.out.println("Bucket sort");
+		System.out.println("Number of comparisons: " + compare);
+		System.out.println("Number of array accesses: " + arrayAccess);
+		System.out.println("Duration in microseconds: " + duration);
 		System.out.println();
 		compare = 0;
 		arrayAccess = 0;
@@ -529,15 +500,11 @@ public class largeSorts {
                 	compare++;
                 	arrayAccess += 2;
                 } //only done when if statement condition is checked but not true
-                compare++;
             }
-            compare++; //this increment pertaining to this for loop
             
-            if (swapped == false) { 
-            	compare++;
+            if (swapped == false) {
             	break; 
             }
-            else { compare++; } //only done when if statement condition is checked but not true
 
             swapped = false;
             end--;
@@ -555,19 +522,17 @@ public class largeSorts {
                 	compare++;
                 	arrayAccess += 2;
                 } //only done when if statement condition is checked but not true
-                compare++;
             }
-            compare++; //this increment pertaining to this for loop
  
             start++;
         } //decided to leave out compares for when while condition is false
         endTime = System.nanoTime();
 		duration = ((endTime - startTime) / 1000);
         
-        //System.out.println("Cocktail sort");
-		System.out.println(compare);
-		System.out.println(arrayAccess);
-		System.out.println(duration);
+        System.out.println("Cocktail sort");
+		System.out.println("Number of comparisons: " + compare);
+		System.out.println("Number of array accesses: " + arrayAccess);
+		System.out.println("Duration in microseconds: " + duration);
 		System.out.println();
 		compare = 0;
 		arrayAccess = 0;
