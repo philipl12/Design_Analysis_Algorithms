@@ -5,36 +5,42 @@ public class Search {
 	
 	// code from https://www.geeksforgeeks.org/depth-first-search-or-dfs-for-a-graph/
 	// and modified for use with adjacency matrix
-	public static void DFSUtil(int rGraph[][], int parent[], boolean visited[], int u) {
+	public static void DFSUtil(long rGraph[][], int parent[], boolean visited[], int u) {
         visited[u] = true;
+        MaxFlow.arrayAccess++;
   
         for (int v = 0; v < V; v++) {
         	if(visited[v] == false && rGraph[u][v] > 0) {
         		DFSUtil(rGraph, parent,visited, v);
         		parent[v] = u;
+        		MaxFlow.arrayAccess += 3;
+        		MaxFlow.compares += 2;
         	}
         }
-         
-
     } 
 
-    public static boolean DFS(int rGraph[][], int parent[], int s, int t) {
+    public static boolean DFS(long rGraph[][], int parent[], int s, int t) {
         boolean visited[] = new boolean[V];
         
         for(int i = 0; i < V; ++i) {
         	visited[i] = false;
+        	MaxFlow.arrayAccess++;
         }
         
         parent[s] = -1;
         DFSUtil(rGraph, parent, visited, s);
+        
+        MaxFlow.arrayAccess += 2; // counted array access for the return as well
+        MaxFlow.compares++; // counted compare for return statement
         return (visited[t] == true);
     }// end DFS methods
 
-	public static boolean bfs(int rGraph[][],int parent[], int s, int t) {
+	public static boolean BFS(long rGraph[][],int parent[], int s, int t) {
         boolean visited[] = new boolean[V];
         
         for(int i = 0; i < V; ++i) {
         	visited[i] = false;
+        	MaxFlow.arrayAccess++;
         } 
 
         LinkedList<Integer> queue = new LinkedList<Integer>();
@@ -44,16 +50,21 @@ public class Search {
 
         while (queue.size() != 0) {
             int u = queue.poll();
+            MaxFlow.compares++;
 
             for (int v = 0; v < V; v++) {
                 if (visited[v] == false && rGraph[u][v] > 0) {
                     queue.add(v);
                     parent[v] = u;
                     visited[v] = true;
+                    MaxFlow.arrayAccess += 4;
+                    MaxFlow.compares += 2;
                 }
             }
         }
-
+        
+        MaxFlow.arrayAccess += 3; // counted array access for the return as well
+        MaxFlow.compares++; // counted compare for return statement
         return (visited[t] == true);
     }
 }
