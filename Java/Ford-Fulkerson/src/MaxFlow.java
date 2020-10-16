@@ -2,15 +2,13 @@
 public class MaxFlow {
 	// code for this project from
 	// https://www.geeksforgeeks.org/ford-fulkerson-algorithm-for-maximum-flow-problem/
-	private static final int V = 6;
+	//private static final int V = 6;
 	public static int compares = 0, arrayAccess = 0;
 	public static long startTime;
 	public static long endTime;
 	public static long duration;
     private int u, v, maxFlow = 0;
-    public long copyOne[][] = new long[V][V];
-    public long copyTwo[][] = new long[V][V];
-    public int parent[] = new int[V];
+
 	
 	private int getMin(int pathFlow, long rGraph) {
 		if (pathFlow < (int)rGraph) {
@@ -24,8 +22,10 @@ public class MaxFlow {
 		}
 	}
 	
-    public void fordFulkerson(long graph[][], int s, int t) {
-
+    public void fordFulkerson(long graph[][], int s, int t, int V) {
+        long copyOne[][] = new long[V][V];
+        long copyTwo[][] = new long[V][V];
+        int parent[] = new int[V];
   
         for (u = 0; u < V; u++) {
         	for (v = 0; v < V; v++) {
@@ -36,7 +36,7 @@ public class MaxFlow {
         }
         
         startTime = System.nanoTime();
-        while (Search.BFS(copyOne, parent, s, t)) {
+        while (Search.BFS(copyOne, parent, s, t, V)) {
             int pathFlow = Integer.MAX_VALUE;
             
             for (v = t; v != s; v = parent[v]) {
@@ -57,6 +57,10 @@ public class MaxFlow {
 		duration = ((endTime - startTime) / 1000);
         
         System.out.println("Max flow using BFS is " + maxFlow);
+        System.out.println(duration);
+        System.out.println(compares);
+        System.out.println(arrayAccess);
+        System.out.println();
         maxFlow = compares = arrayAccess = 0;
         duration = 0;
         
@@ -66,7 +70,7 @@ public class MaxFlow {
         }
         
         startTime = System.nanoTime();
-        while (Search.DFS(copyTwo, parent, s, t)) {
+        while (Search.DFS(copyTwo, parent, s, t, V)) {
             int pathFlow = Integer.MAX_VALUE;
             
             for (v = t; v != s; v = parent[v]) {
@@ -87,5 +91,11 @@ public class MaxFlow {
 		duration = ((endTime - startTime) / 1000);
         
         System.out.println("Max flow using DFS is " + maxFlow);
+        System.out.println(duration);
+        System.out.println(compares);
+        System.out.println(arrayAccess);
+        System.out.println();
+        maxFlow = compares = arrayAccess = 0;
+        
     } 
 }
